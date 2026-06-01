@@ -38,8 +38,8 @@ COPY agent/ agent/
 # Copy built frontend
 COPY --from=frontend-build /app/frontend/dist frontend/dist
 
-# Install CLI entrypoint
-RUN pip install --no-cache-dir -e .
+# Install CLI entrypoint (+ EVM extra so the worker can anchor on Mantle/Somnia)
+RUN pip install --no-cache-dir -e ".[evm]"
 
 # Runtime should not run as root. Keep writable app data directories owned by
 # the service user so named Docker volumes inherit usable permissions.

@@ -53,6 +53,7 @@ class VaultEntry:
     sui_tx_digest: str | None = None
     sui_object_id: str | None = None
     move_call: dict[str, Any] | None = None
+    evm: list[dict[str, Any]] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
 
     def to_dict(self) -> dict[str, Any]:
@@ -65,6 +66,7 @@ class VaultEntry:
             "sui_tx_digest": self.sui_tx_digest,
             "sui_object_id": self.sui_object_id,
             "move_call": self.move_call,
+            "evm": self.evm,
             "created_at": self.created_at,
         }
 
@@ -177,7 +179,27 @@ class SignalVault:
                     entry.sui_object_id = proof.get("object_id")
             except _SigningUnavailable:
                 pass  # Walrus-only mode; move_call already populated.
+            # Anchor the same manifest on any configured EVM chains (Mantle/Somnia).
+            entry.evm = self._register_evm(manifest_blob)
         return entry
+
+    def _register_evm(self, manifest_blob: WalrusBlob) -> list[dict[str, Any]]:
+        """Anchor the manifest on every configured EVM target. Best-effort."""
+        try:
+            from src.integrations.evm import EvmSignalVault, EvmVaultError, load_targets_from_env
+        except ImportError:
+            return []
+        results: list[dict[str, Any]] = []
+        for cfg in load_targets_from_env():
+            try:
+                res = EvmSignalVault(cfg).publish_signal(
+                    manifest_blob.blob_id, manifest_blob.sha256, manifest_blob.size
+                )
+                res["ok"] = True
+                results.append(res)
+            except EvmVaultError as exc:
+                results.append({"ok": False, "chain": cfg.name, "error": str(exc)})
+        return results
 
     def _build_move_call(self, manifest_blob: WalrusBlob) -> dict[str, Any]:
         """Describe the ``signal_vault::publish_signal`` call for this manifest."""
