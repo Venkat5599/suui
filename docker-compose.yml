@@ -10,7 +10,36 @@ services:
     volumes:
       - vibe-runs:/app/agent/runs
       - vibe-sessions:/app/agent/sessions
+      - vibe-runtime:/home/vibe/.vibe-trading
     restart: unless-stopped
+
+  # Autonomous trading worker: runs the agent on a schedule, 24/7.
+  # Shares the runtime volume with the API container so a `live halt`
+  # tripped anywhere instantly stops the worker's next cycle.
+  worker:
+    build: .
+    env_file:
+      - agent/.env
+    environment:
+      # --- schedule ---
+      - VIBE_AUTO_INTERVAL=${VIBE_AUTO_INTERVAL:-900}
+      - VIBE_AUTO_MAX_ITER=${VIBE_AUTO_MAX_ITER:-30}
+      - VIBE_AUTO_CYCLE_TIMEOUT=${VIBE_AUTO_CYCLE_TIMEOUT:-1200}
+      # --- what to run each cycle (set one) ---
+      - VIBE_AUTO_PROMPT=${VIBE_AUTO_PROMPT:-}
+      - VIBE_AUTO_PROMPT_FILE=${VIBE_AUTO_PROMPT_FILE:-}
+      # --- vault + safety ---
+      - VIBE_AUTO_PUBLISH_VAULT=${VIBE_AUTO_PUBLISH_VAULT:-0}
+      - VIBE_AUTO_ALLOW_LIVE=${VIBE_AUTO_ALLOW_LIVE:-0}
+    volumes:
+      - vibe-runs:/app/agent/runs
+      - vibe-sessions:/app/agent/sessions
+      - vibe-runtime:/home/vibe/.vibe-trading
+    command: ["vibe-trading-worker"]
+    restart: unless-stopped
+    depends_on:
+      vibe-trading:
+        condition: service_started
 
   frontend:
     image: node:20
@@ -31,3 +60,4 @@ services:
 volumes:
   vibe-runs:
   vibe-sessions:
+  vibe-runtime:
