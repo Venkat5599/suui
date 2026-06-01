@@ -30,6 +30,30 @@ curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/gtzCAD5kneL5NhzH
 
 On SuiScan: https://suiscan.xyz/testnet/object/0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897
 
+## Attribution (what's ours vs. the base)
+
+This project **builds on the open-source [Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) agent platform (MIT)** — the conversational trading agent, backtest engines, and React frontend come from that base, and its LICENSE/NOTICE are retained.
+
+**Everything blockchain is our original contribution:**
+- `agent/src/integrations/{sui,walrus,evm}/` + `vault.py` — the Signal Vault (Walrus storage + multi-chain anchoring)
+- `agent/src/tools/walrus_vault_tool.py` — the agent-facing vault tool (publish / discover / verify)
+- `agent/src/autonomous/worker.py` — the 24/7 autonomous decision loop
+- `sui/signal_vault/` (Move) + `evm/signal_vault/` (Solidity) — the on-chain contracts
+
+## Autonomy — the agent *decides*, it doesn't just schedule
+
+Each cycle the agent runs **as an agent**, not a cron job:
+
+1. Runs a backtest (via its `backtest` tool).
+2. Calls `walrus_vault discover` to read **what it has already published on-chain** (Sui `SignalPublished` events via Tatum + EVM entry counts).
+3. **Reasons and decides:** publish only if the strategy clears a quality bar *and* is novel versus its most recent on-chain entry — otherwise it declines and explains why.
+4. If it decides to publish, it invokes `walrus_vault publish` itself.
+
+Example real decision (from a live cycle):
+> *"Sharpe ratio **-2.27**, far below the 0.30 threshold... performance markedly worse than benchmark — **did NOT publish.**"*
+
+The agent discovers chain state, evaluates, and acts on its own. That is the agent-native behavior.
+
 ## What it does
 
 Vibe-Trading is an AI trading agent that generates signal engines and runs
