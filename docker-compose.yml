@@ -28,6 +28,14 @@ services:
       - vibe-sessions:/app/agent/sessions
       - vibe-runtime:/home/vibe/.vibe-trading
     command: ["vibe-trading-worker"]
+    # The worker doesn't serve HTTP, so override the image's API healthcheck.
+    # Healthy = it has written a valid heartbeat (proves the loop is alive).
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import json; json.load(open('/home/vibe/.vibe-trading/autonomous/heartbeat.json'))\""]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
     restart: unless-stopped
     depends_on:
       vibe-trading:
