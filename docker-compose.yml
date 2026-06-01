@@ -18,19 +18,11 @@ services:
   # tripped anywhere instantly stops the worker's next cycle.
   worker:
     build: .
+    # All VIBE_AUTO_* config lives in agent/.env. Do NOT also list them under
+    # `environment:` with ${VAR:-} defaults — an explicit environment entry
+    # overrides env_file, so an unset host var would blank the prompt.
     env_file:
       - agent/.env
-    environment:
-      # --- schedule ---
-      - VIBE_AUTO_INTERVAL=${VIBE_AUTO_INTERVAL:-900}
-      - VIBE_AUTO_MAX_ITER=${VIBE_AUTO_MAX_ITER:-30}
-      - VIBE_AUTO_CYCLE_TIMEOUT=${VIBE_AUTO_CYCLE_TIMEOUT:-1200}
-      # --- what to run each cycle (set one) ---
-      - VIBE_AUTO_PROMPT=${VIBE_AUTO_PROMPT:-}
-      - VIBE_AUTO_PROMPT_FILE=${VIBE_AUTO_PROMPT_FILE:-}
-      # --- vault + safety ---
-      - VIBE_AUTO_PUBLISH_VAULT=${VIBE_AUTO_PUBLISH_VAULT:-0}
-      - VIBE_AUTO_ALLOW_LIVE=${VIBE_AUTO_ALLOW_LIVE:-0}
     volumes:
       - vibe-runs:/app/agent/runs
       - vibe-sessions:/app/agent/sessions
