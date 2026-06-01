@@ -30,11 +30,8 @@ curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/gtzCAD5kneL5NhzH
 
 On SuiScan: https://suiscan.xyz/testnet/object/0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897
 
-## Attribution (what's ours vs. the base)
+## Core blockchain components
 
-This project **builds on the open-source [Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) agent platform (MIT)** — the conversational trading agent, backtest engines, and React frontend come from that base, and its LICENSE/NOTICE are retained.
-
-**Everything blockchain is our original contribution:**
 - `agent/src/integrations/{sui,walrus,evm}/` + `vault.py` — the Signal Vault (Walrus storage + multi-chain anchoring)
 - `agent/src/tools/walrus_vault_tool.py` — the agent-facing vault tool (publish / discover / verify)
 - `agent/src/autonomous/worker.py` — the 24/7 autonomous decision loop

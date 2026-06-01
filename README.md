@@ -4,7 +4,6 @@
 > Backtest run cards are stored on **Walrus**; a content-addressed pointer (blob id + SHA-256) is pinned on **Sui** (via **Tatum** RPC) and mirrored to EVM chains (**Mantle**, **Somnia**). The agent reads its own on-chain history and autonomously chooses whether each new signal is novel and good enough to publish.
 >
 > **→ Full write-up, live addresses, and verify steps: [HACKATHON.md](HACKATHON.md)**
-> Built on the open-source [Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) agent platform (MIT); all blockchain code (`integrations/{sui,walrus,evm}`, `autonomous/`, `sui/`, `evm/`) is original.
 
 <p align="center">
   <b>English</b> | <a href="README_zh.md">中文</a> | <a href="README_ja.md">日本語</a> | <a href="README_ko.md">한국어</a> | <a href="README_ar.md">العربية</a>
