@@ -2,7 +2,9 @@ services:
   vibe-trading:
     build: .
     ports:
-      - "127.0.0.1:8899:8899"
+      # Loopback-only by default (safe). Set API_BIND=0.0.0.0 to expose
+      # publicly — only do so together with API_AUTH_KEY set in agent/.env.
+      - "${API_BIND:-127.0.0.1}:8899:8899"
     env_file:
       - agent/.env
     environment:
