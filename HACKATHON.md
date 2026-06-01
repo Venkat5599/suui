@@ -2,6 +2,34 @@
 
 Submission for **Tatum × Build on Sui with Walrus** (deadline **June 6, 17:00 UTC**).
 
+## ✅ Live deployment (Sui testnet, via Tatum RPC)
+
+The integration is **deployed and running autonomously 24/7**. A worker runs a
+backtest on a schedule, publishes the run card to Walrus, and pins a
+`SignalEntry` on Sui — every cycle, no human in the loop.
+
+| Artifact | Value |
+|----------|-------|
+| `signal_vault` package | `0x0e4326568fb219c65f63457849c9878f06ac1c7f8f0c44795d0dc78e18565b87` |
+| Example `SignalEntry` (auto-created by the worker) | `0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897` |
+| Walrus manifest blob | `gtzCAD5kneL5NhzHXG9W0O3Vh0EN6SzGMWiXlHQxS4Q` |
+| Publisher wallet | `0x52f8614201a72767b03314be8a5d4911d549485f684140d42ddc2339cd4992e6` |
+| RPC | `https://sui-testnet.gateway.tatum.io` (Tatum) |
+
+Verify it yourself (reads route through Tatum):
+
+```bash
+# On-chain SignalEntry — its blob_id + sha256 match the Walrus manifest
+curl -s -X POST https://sui-testnet.gateway.tatum.io \
+  -H "Content-Type: application/json" -H "x-api-key: <YOUR_TATUM_KEY>" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"sui_getObject","params":["0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897",{"showContent":true}]}'
+
+# The Walrus manifest blob it points to
+curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/gtzCAD5kneL5NhzHXG9W0O3Vh0EN6SzGMWiXlHQxS4Q
+```
+
+On SuiScan: https://suiscan.xyz/testnet/object/0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897
+
 ## What it does
 
 Vibe-Trading is an AI trading agent that generates signal engines and runs
