@@ -279,6 +279,52 @@ class SignalVault:
             "artifacts": results,
         }
 
+    def discover(self, *, limit: int = 10) -> dict[str, Any]:
+        """Read what's already published on-chain, so an agent can reason.
+
+        Queries the Sui ``SignalPublished`` event stream (through Tatum) and the
+        entry count on each configured EVM chain. This is the chain-state lens an
+        autonomous agent uses to decide whether a new signal is novel enough to
+        publish (vs. a near-duplicate of its last on-chain entry).
+
+        Returns:
+            ``{sui: {package, count, recent:[{blob_id, sha256, publisher, ...}]},
+               evm: [{chain, count, ...}]}``.
+        """
+        report: dict[str, Any] = {"sui": {"package": self.package_id, "recent": []}, "evm": []}
+
+        # Sui: pull recent SignalPublished events via Tatum RPC.
+        if self.package_id:
+            event_type = f"{self.package_id}::signal_vault::SignalPublished"
+            try:
+                events = self.sui.query_events(event_type, limit=limit)
+                parsed = [
+                    {
+                        "blob_id": e.get("parsedJson", {}).get("blob_id"),
+                        "sha256": e.get("parsedJson", {}).get("sha256"),
+                        "publisher": e.get("parsedJson", {}).get("publisher"),
+                        "tx": e.get("id", {}).get("txDigest"),
+                    }
+                    for e in (events.get("data") or [])
+                ]
+                report["sui"]["recent"] = parsed
+                report["sui"]["count"] = len(parsed)
+            except Exception as exc:  # discovery is informational; never fatal.
+                report["sui"]["error"] = str(exc)
+
+        # EVM: entry count per configured chain.
+        try:
+            from src.integrations.evm import EvmSignalVault, load_targets_from_env
+
+            for cfg in load_targets_from_env():
+                try:
+                    report["evm"].append({"chain": cfg.name, "count": EvmSignalVault(cfg).count()})
+                except Exception as exc:
+                    report["evm"].append({"chain": cfg.name, "error": str(exc)})
+        except ImportError:
+            pass
+        return report
+
     def verify_on_chain(self, object_id: str) -> dict[str, Any]:
         """Read a published vault object from Sui and return its fields.
 

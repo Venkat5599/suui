@@ -27,6 +27,8 @@ class WalrusVaultTool(BaseTool):
         "a tamper-evident pointer on Sui (via Tatum RPC). "
         "fetch: read a stored manifest or blob back from Walrus by id. "
         "verify: re-hash every stored blob to confirm nothing was altered. "
+        "discover: read what is ALREADY published on-chain (Sui events + EVM counts) "
+        "so you can judge whether a new signal is novel before publishing. "
         "status: check Sui chain connectivity through the Tatum gateway."
     )
     is_readonly = False
@@ -35,8 +37,8 @@ class WalrusVaultTool(BaseTool):
         "properties": {
             "action": {
                 "type": "string",
-                "enum": ["publish", "fetch", "verify", "status"],
-                "description": "publish | fetch | verify | status",
+                "enum": ["publish", "fetch", "verify", "discover", "status"],
+                "description": "publish | fetch | verify | discover | status",
             },
             "run_dir": {
                 "type": "string",
@@ -79,6 +81,8 @@ class WalrusVaultTool(BaseTool):
                 return self._fetch(vault, kwargs)
             if action == "verify":
                 return self._verify(vault, kwargs)
+            if action == "discover":
+                return self._discover(vault, kwargs)
             if action == "status":
                 return self._status(vault)
             return json.dumps({"status": "error", "error": f"Unknown action: {action}"})
@@ -94,6 +98,12 @@ class WalrusVaultTool(BaseTool):
         result = entry.to_dict()
         result["status"] = "ok"
         result["on_chain"] = bool(entry.sui_tx_digest)
+        # Concise multi-chain summary the agent can report back.
+        chains: list[str] = []
+        if entry.sui_object_id:
+            chains.append("sui")
+        chains.extend(e["chain"] for e in entry.evm if e.get("ok"))
+        result["anchored_chains"] = chains
         if not entry.sui_tx_digest:
             result["note"] = (
                 "Stored on Walrus. On-chain registration skipped (no signer/key/package). "
@@ -111,6 +121,11 @@ class WalrusVaultTool(BaseTool):
             text = vault.walrus.read_text(blob_id)
             return json.dumps({"status": "ok", "blob_id": blob_id, "content": text[:8000]}, ensure_ascii=False)
         return json.dumps({"status": "error", "error": "manifest_blob_id or blob_id required"})
+
+    def _discover(self, vault: SignalVault, kwargs: dict) -> str:
+        report = vault.discover(limit=int(kwargs.get("limit", 10)))
+        report["status"] = "ok"
+        return json.dumps(report, ensure_ascii=False)
 
     def _verify(self, vault: SignalVault, kwargs: dict) -> str:
         manifest_id = kwargs.get("manifest_blob_id")
