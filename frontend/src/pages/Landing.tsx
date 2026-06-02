@@ -97,15 +97,31 @@ function Hero() {
 
   return (
     <section className="relative min-h-dvh w-full overflow-hidden">
-      {/* Lavender gradient backdrop (CSS recreation of KRAFT's gradient-fade) */}
+      {/* Vivid lavender mesh + animated blobs (KRAFT-style, light theme) */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(120% 70% at 50% -10%, rgba(115,136,223,0.55) 0%, rgba(124,58,237,0.20) 35%, rgba(255,255,255,0) 65%), #ffffff",
+            "radial-gradient(90% 60% at 50% 12%, rgba(99,102,241,0.55) 0%, rgba(124,58,237,0.32) 38%, rgba(199,210,254,0.18) 62%, rgba(255,255,255,0) 80%), #ffffff",
         }}
         aria-hidden="true"
       />
+      <motion.div
+        className="pointer-events-none absolute z-0 h-[36rem] w-[36rem] rounded-full blur-[90px]"
+        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.55), transparent 60%)", top: "2rem", left: "8%" }}
+        animate={{ x: [0, 80, 0], y: [0, 50, 0], scale: [1, 1.1, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="pointer-events-none absolute z-0 h-[32rem] w-[32rem] rounded-full blur-[90px]"
+        style={{ background: "radial-gradient(circle, rgba(139,92,246,0.50), transparent 60%)", top: "1rem", right: "6%" }}
+        animate={{ x: [0, -70, 0], y: [0, 60, 0], scale: [1, 1.12, 1] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        aria-hidden="true"
+      />
+      {/* Fade the wash into white toward the chat box for legibility */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/2 bg-gradient-to-b from-transparent to-white" aria-hidden="true" />
 
       <Container className="flex min-h-dvh max-w-4xl flex-col items-start justify-center gap-8 pt-28">
         <motion.h1
