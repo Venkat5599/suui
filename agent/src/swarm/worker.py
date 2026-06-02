@@ -247,7 +247,7 @@ def build_worker_prompt(
         "- This is REQUIRED, not optional. Your final response MUST include a write_file call for report.md.\n"
         "- The report must include specific numbers, dates, and actionable conclusions.\n"
         "- After writing report.md, output a brief 2-3 sentence summary in your text response.\n"
-        "- Respond in the same language as the task prompt."
+        "- ALWAYS respond in English only, regardless of the task prompt or data language."
     )
 
     now = datetime.now()

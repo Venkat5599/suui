@@ -93,7 +93,7 @@ const CATEGORIES: Category[] = [
     examples: [
       {
         title: "Analyze My Broker Export",
-        desc: "Parse 同花顺/东财/富途/generic CSV — holding days, win rate, PnL ratio, hourly distribution",
+        desc: "Parse any broker CSV export — holding days, win rate, PnL ratio, hourly distribution",
         prompt: "Analyze the trade journal I just uploaded — full profile with holding stats, win rate, top symbols, and hourly distribution",
       },
       {
