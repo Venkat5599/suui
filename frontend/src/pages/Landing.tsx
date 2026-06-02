@@ -74,6 +74,36 @@ function Header() {
   );
 }
 
+// ── Scramble/decode text reveal (themed: "decoding the hidden mechanism") ───
+function Scramble({ text, className = "" }: { text: string; className?: string }) {
+  const [display, setDisplay] = useState(text);
+  useEffect(() => {
+    const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&";
+    let frame = 0;
+    const total = text.length * 3;
+    const id = window.setInterval(() => {
+      frame++;
+      const revealed = Math.floor((frame / total) * text.length);
+      setDisplay(
+        text
+          .split("")
+          .map((ch, i) => {
+            if (ch === " ") return " ";
+            if (i < revealed) return ch;
+            return glyphs[Math.floor(Math.random() * glyphs.length)];
+          })
+          .join(""),
+      );
+      if (frame >= total) {
+        setDisplay(text);
+        window.clearInterval(id);
+      }
+    }, 30);
+    return () => window.clearInterval(id);
+  }, [text]);
+  return <span className={className}>{display}</span>;
+}
+
 // ── Hero with signature chat-input card ─────────────────────────────────────
 function Hero() {
   const navigate = useNavigate();
@@ -132,7 +162,10 @@ function Hero() {
         >
           <span className="block">Trade with AI —</span>
           <span className="block">
-            read the <em className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text not-italic font-semibold text-transparent italic">hidden mechanism</em>
+            read the{" "}
+            <em className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text not-italic font-semibold text-transparent italic">
+              <Scramble text="hidden mechanism" />
+            </em>
           </span>
         </motion.h1>
 
