@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 
 export function Hero3() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
+  // Mouse position in a ref (not state) so moving the cursor does NOT re-run the
+  // WebGL setup effect — that previously rebuilt the whole three.js scene on every
+  // mouse move, causing severe scroll/page lag.
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -192,14 +195,24 @@ export function Hero3() {
 
     const clock = new THREE.Clock();
 
+    // Pause the render loop when the hero is scrolled out of view — no point
+    // burning GPU on a shader nobody can see (kills scroll lag on lower sections).
+    let visible = true;
+    const io = new IntersectionObserver(
+      (entries) => { visible = entries[0]?.isIntersecting ?? true; },
+      { threshold: 0.01 },
+    );
+    if (canvasRef.current) io.observe(canvasRef.current);
+
     let animationId: number;
     const animate = () => {
+      animationId = requestAnimationFrame(animate);
+      if (!visible) return;
       const time = clock.getElapsedTime();
       material.uniforms.uTime.value = time;
-      material.uniforms.uMouse.value.x = mousePosition.x;
-      material.uniforms.uMouse.value.y = mousePosition.y;
+      material.uniforms.uMouse.value.x = mouseRef.current.x;
+      material.uniforms.uMouse.value.y = mouseRef.current.y;
       renderer.render(scene, camera);
-      animationId = requestAnimationFrame(animate);
     };
     animate();
 
@@ -225,18 +238,20 @@ export function Hero3() {
 
     return () => {
       cancelAnimationFrame(animationId);
+      io.disconnect();
       window.removeEventListener("resize", handleResize);
       geometry.dispose();
       material.dispose();
       renderer.dispose();
     };
-  }, [mousePosition]);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = 1.0 - (e.clientY - rect.top) / rect.height;
-    setMousePosition({ x, y });
+    mouseRef.current = {
+      x: (e.clientX - rect.left) / rect.width,
+      y: 1.0 - (e.clientY - rect.top) / rect.height,
+    };
   };
 
   return (
@@ -263,7 +278,7 @@ export function Hero3() {
             </div>
             <div>
               <a
-                className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors duration-200 text-[max(0.9rem,1vmax)] font-medium"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white text-neutral-900 shadow-lg hover:bg-neutral-100 transition-colors duration-200 text-[max(0.9rem,1vmax)] font-semibold"
                 href="/dashboard"
               >
                 Launch App
@@ -343,7 +358,7 @@ export function Hero3() {
         {/* Bottom Section - Title and Links */}
         <div className="flex flex-col items-start md:flex-row">
           {/* Title */}
-          <h1 className="pb-[4vmax] pl-[4vmax] pr-[4vmax] text-white relative text-[5vmax] leading-tight">
+          <h1 className="pb-[4vmax] pl-[4vmax] pr-[4vmax] text-white relative text-[6.5vmax] font-medium leading-[1.02] tracking-tight">
             Read the market&apos;s
             <br />
             hidden mechanism
@@ -384,16 +399,14 @@ export function Hero3() {
 
           {/* Links Section */}
           <div className="bg-white dark:bg-neutral-950 flex-1 h-full rounded-tl-[3vmax] relative font-light text-[max(1rem,1.4vmax)] flex items-end justify-end pt-[4vmax] self-end pl-[4vmax]">
-            <ul className="flex flex-col gap-[max(0.7rem,0.8vmax)] opacity-50 hover:opacity-100 transition-opacity duration-300 items-end">
+            <ul className="flex flex-col gap-[max(0.7rem,0.8vmax)] font-medium items-end">
               <motion.li
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 1.4 }}
               >
                 <a
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="/agent"
                   className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
                 >
                   <span className="relative">
@@ -409,9 +422,7 @@ export function Hero3() {
                 transition={{ duration: 0.5, delay: 1.5 }}
               >
                 <a
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="/dashboard"
                   className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
                 >
                   <span className="relative">
@@ -427,16 +438,11 @@ export function Hero3() {
                 transition={{ duration: 0.5, delay: 1.6 }}
               >
                 <a
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
+                  href="/dashboard"
+                  className="group mt-1 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-white shadow-lg transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
                 >
-                  <span className="relative">
-                    Launch App
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-900 dark:bg-white group-hover:w-full transition-all duration-300 origin-left" />
-                  </span>
-                  <ArrowUpRight className="w-[max(1rem,1.4vmax)] h-[max(1rem,1.4vmax)]" />
+                  <span>Launch App</span>
+                  <ArrowUpRight className="w-[max(1rem,1.4vmax)] h-[max(1rem,1.4vmax)] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               </motion.li>
             </ul>
