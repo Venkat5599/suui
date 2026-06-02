@@ -10,8 +10,8 @@
     --card: 0 0% 100%;
     --card-foreground: 220 20% 10%;
 
-    /* Brand accent — indigo, matches landing (#6366F1) */
-    --primary: 239 84% 67%;
+    /* Monochrome accent — near-black on light surfaces */
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 100%;
 
     --muted: 220 14% 92%;
@@ -36,33 +36,33 @@
   }
 
   .dark {
-    /* Dark mode: deep indigo-black to match the landing (ai-saas palette) */
-    --background: 231 52% 3%;       /* bg-base — #03040A */
-    --foreground: 240 12% 96%;
-    --card: 230 32% 7%;             /* surface-1 — glassy near-black */
-    --card-foreground: 240 12% 96%;
+    /* Dark mode: neutral monochrome (true black/gray, no hue) */
+    --background: 0 0% 4%;          /* bg-base — near-black */
+    --foreground: 0 0% 96%;
+    --card: 0 0% 7%;               /* surface-1 */
+    --card-foreground: 0 0% 96%;
 
-    --primary: 239 84% 67%;         /* indigo #6366F1 */
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 96%;           /* accent = near-white on dark */
+    --primary-foreground: 0 0% 9%;
 
-    --muted: 230 26% 11%;           /* surface-2 */
-    --muted-foreground: 230 10% 58%;
+    --muted: 0 0% 12%;             /* surface-2 */
+    --muted-foreground: 0 0% 58%;
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 232 22% 16%;          /* surface-3 — ~white/10 on dark */
+    --border: 0 0% 18%;            /* surface-3 */
 
-    /* Semantic colors */
-    --success: 152 60% 50%;
+    /* Semantic colors (kept minimal/neutral) */
+    --success: 0 0% 80%;
     --danger: 0 72% 60%;
-    --warning: 38 92% 55%;
-    --info: 239 84% 67%;
+    --warning: 0 0% 70%;
+    --info: 0 0% 80%;
 
-    /* Chart tokens */
-    --chart-grid: 232 22% 13%;
-    --chart-text: 230 10% 48%;
-    --chart-axis: 232 22% 20%;
-    --chart-compare-a: #6366F1;
-    --chart-compare-b: #a5b4fc;
+    /* Chart tokens (grayscale) */
+    --chart-grid: 0 0% 14%;
+    --chart-text: 0 0% 48%;
+    --chart-axis: 0 0% 22%;
+    --chart-compare-a: #e5e5e5;
+    --chart-compare-b: #737373;
   }
 
   * { @apply border-border; }

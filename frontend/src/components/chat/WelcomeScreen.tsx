@@ -14,8 +14,8 @@ interface Category {
 
 // Unified indigo accent so the dashboard matches the landing's ai-saas aesthetic.
 const CARD_ACCENT =
-  "border-indigo-500/20 hover:border-indigo-500/50 hover:bg-indigo-500/10";
-const LABEL_ACCENT = "text-indigo-300";
+  "border-border hover:border-foreground/30 hover:bg-foreground/5";
+const LABEL_ACCENT = "text-foreground";
 
 const CATEGORIES: Category[] = [
   {
@@ -174,11 +174,11 @@ export function WelcomeScreen({ onExample }: Props) {
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 text-center">
       {/* Header */}
       <div className="space-y-3">
-        <div className="h-16 w-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-1 ring-white/10">
-          <Bot className="h-8 w-8 text-white" />
+        <div className="h-16 w-16 mx-auto rounded-2xl bg-foreground flex items-center justify-center shadow-lg ring-1 ring-border">
+          <Bot className="h-8 w-8 text-background" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Tenki <span className="text-indigo-400">天機</span></h2>
+          <h2 className="text-2xl font-bold tracking-tight">Tenki <span className="text-muted-foreground">天機</span></h2>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto leading-relaxed">
             read the market&apos;s hidden mechanism — your professional financial agent team
           </p>
@@ -193,7 +193,7 @@ export function WelcomeScreen({ onExample }: Props) {
         {CAPABILITY_CHIPS.map((chip) => (
           <span
             key={chip}
-            className="px-2.5 py-1 text-xs rounded-full border border-indigo-500/20 text-muted-foreground bg-indigo-500/5 transition-colors hover:border-indigo-500/40 hover:text-foreground"
+            className="px-2.5 py-1 text-xs rounded-full border border-border text-muted-foreground bg-muted/40 transition-colors hover:border-foreground/30 hover:text-foreground"
           >
             {chip}
           </span>

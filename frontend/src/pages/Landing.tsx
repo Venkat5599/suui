@@ -54,7 +54,7 @@ function Header() {
     >
       <Container className="flex h-20 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-gray-900">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white shadow-sm">天</span>
+          <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-gray-700 to-gray-900 text-sm font-bold text-white shadow-sm">天</span>
           Tenki <span className="font-normal text-gray-400">天機</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-medium text-gray-600 md:flex">
@@ -132,20 +132,20 @@ function Hero() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(90% 60% at 50% 12%, rgba(99,102,241,0.55) 0%, rgba(124,58,237,0.32) 38%, rgba(199,210,254,0.18) 62%, rgba(255,255,255,0) 80%), #ffffff",
+            "radial-gradient(90% 60% at 50% 12%, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.08) 38%, rgba(0,0,0,0.03) 62%, rgba(255,255,255,0) 80%), #ffffff",
         }}
         aria-hidden="true"
       />
       <motion.div
         className="pointer-events-none absolute z-0 h-[36rem] w-[36rem] rounded-full blur-[90px]"
-        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.55), transparent 60%)", top: "2rem", left: "8%" }}
+        style={{ background: "radial-gradient(circle, rgba(0,0,0,0.18), transparent 60%)", top: "2rem", left: "8%" }}
         animate={{ x: [0, 80, 0], y: [0, 50, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
       />
       <motion.div
         className="pointer-events-none absolute z-0 h-[32rem] w-[32rem] rounded-full blur-[90px]"
-        style={{ background: "radial-gradient(circle, rgba(139,92,246,0.50), transparent 60%)", top: "1rem", right: "6%" }}
+        style={{ background: "radial-gradient(circle, rgba(0,0,0,0.14), transparent 60%)", top: "1rem", right: "6%" }}
         animate={{ x: [0, -70, 0], y: [0, 60, 0], scale: [1, 1.12, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
@@ -163,7 +163,7 @@ function Hero() {
           <span className="block">Trade with AI —</span>
           <span className="block">
             read the{" "}
-            <em className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text not-italic font-semibold text-transparent italic">
+            <em className="bg-gradient-to-r not-italic font-semibold text-gray-900 italic">
               <Scramble text="hidden mechanism" />
             </em>
           </span>
@@ -178,7 +178,7 @@ function Hero() {
         >
           <div
             className="relative rounded-[2rem] border border-black/5 bg-[#f8f8fa] p-3"
-            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 4px 16px rgba(124,58,237,0.10)" }}
+            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.10)" }}
           >
             <textarea
               value={prompt}
@@ -263,7 +263,7 @@ function Stats() {
       <Container className="grid grid-cols-2 gap-8 md:grid-cols-4">
         {STATS.map((s) => (
           <motion.div key={s.label} {...fadeUp} className="text-center">
-            <div className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-4xl font-semibold text-transparent">{s.value}</div>
+            <div className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-4xl font-semibold text-transparent">{s.value}</div>
             <div className="mt-1 text-sm font-medium text-gray-800">{s.label}</div>
             <div className="text-xs text-gray-400">{s.sub}</div>
           </motion.div>
@@ -287,7 +287,7 @@ function Features() {
     <section id="features" className="bg-[#fafafb] py-24">
       <Container>
         <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-indigo-500">Capabilities</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-gray-900">Capabilities</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">A professional agent team, on tap</h2>
           <p className="mt-4 text-gray-500">Everything you need to go from a sentence to a provable, on-chain trading signal.</p>
         </motion.div>
@@ -299,7 +299,7 @@ function Features() {
               transition={{ ...fadeUp.transition, delay: (i % 3) * 0.08 }}
               className="group rounded-3xl border border-black/5 bg-white p-7 shadow-sm transition hover:shadow-md"
             >
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-indigo-500 transition group-hover:bg-indigo-100">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gray-100 text-gray-900 transition group-hover:bg-gray-200">
                 <f.icon className="h-5 w-5" />
               </div>
               <h3 className="mt-5 text-lg font-medium text-gray-900">{f.title}</h3>
@@ -323,7 +323,7 @@ function HowItWorks() {
     <section id="how" className="bg-white py-24">
       <Container>
         <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-indigo-500">Workflow</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-gray-900">Workflow</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">From a sentence to a signal</h2>
         </motion.div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -351,14 +351,14 @@ function OnChain() {
     <section id="onchain" className="bg-[#fafafb] py-24">
       <Container className="grid items-center gap-12 lg:grid-cols-2">
         <motion.div {...fadeUp}>
-          <p className="text-sm font-medium uppercase tracking-widest text-indigo-500">Proof, not promises</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-gray-900">Proof, not promises</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">Every signal, anchored across three chains</h2>
           <p className="mt-4 text-gray-500">
             Backtest manifests are stored on Walrus and registered on-chain with their SHA-256. Anyone can fetch the
             manifest and verify it matches what was committed — no trust required.
           </p>
           <div className="mt-6 flex items-center gap-3 text-sm text-gray-600">
-            <Boxes className="h-5 w-5 text-indigo-500" />
+            <Boxes className="h-5 w-5 text-gray-900" />
             Content-addressed · tamper-evident · publicly verifiable
           </div>
         </motion.div>
@@ -369,7 +369,7 @@ function OnChain() {
                 <div className="font-medium text-gray-900">{c.name}</div>
                 <div className="text-xs text-gray-400">{c.role}</div>
               </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">Live</span>
+              <span className="rounded-full bg-gray-900 px-3 py-1 text-xs font-medium text-white">Live</span>
             </div>
           ))}
         </motion.div>
@@ -389,7 +389,7 @@ function Pricing() {
     <section id="pricing" className="bg-white py-24">
       <Container>
         <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-indigo-500">Pricing</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-gray-900">Pricing</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">Start free. Stay free for the demo.</h2>
         </motion.div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -397,7 +397,7 @@ function Pricing() {
             <motion.div
               key={p.name}
               {...fadeUp}
-              className={`rounded-3xl border p-8 ${p.highlight ? "border-indigo-200 bg-gradient-to-b from-indigo-50 to-white shadow-md ring-1 ring-indigo-100" : "border-black/5 bg-white shadow-sm"}`}
+              className={`rounded-3xl border p-8 ${p.highlight ? "border-gray-300 bg-gradient-to-b from-gray-50 to-white shadow-md ring-1 ring-gray-200" : "border-black/5 bg-white shadow-sm"}`}
             >
               <div className="text-sm font-medium text-gray-500">{p.name}</div>
               <div className="mt-2 text-4xl font-semibold tracking-tight text-gray-900">{p.price}</div>
@@ -405,7 +405,7 @@ function Pricing() {
               <ul className="mt-6 space-y-2.5">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                    <Check className="h-4 w-4 shrink-0 text-indigo-500" /> {f}
+                    <Check className="h-4 w-4 shrink-0 text-gray-900" /> {f}
                   </li>
                 ))}
               </ul>
@@ -436,7 +436,7 @@ function Faq() {
     <section id="faq" className="bg-[#fafafb] py-24">
       <Container className="max-w-3xl">
         <motion.div {...fadeUp} className="text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-indigo-500">FAQ</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-gray-900">FAQ</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">Questions, answered</h2>
         </motion.div>
         <div className="mt-12 divide-y divide-black/5 rounded-3xl border border-black/5 bg-white px-6 shadow-sm">
@@ -463,7 +463,7 @@ function BottomCTA() {
         <motion.div
           {...fadeUp}
           className="relative overflow-hidden rounded-[2.5rem] px-8 py-20 text-center text-white"
-          style={{ background: "radial-gradient(120% 120% at 50% 0%, #6366F1 0%, #4338CA 60%, #312E81 100%)" }}
+          style={{ background: "radial-gradient(120% 120% at 50% 0%, #3f3f46 0%, #1c1c1f 55%, #000000 100%)" }}
         >
           <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur">
             <Zap className="h-3.5 w-3.5" /> Natural-language quant research, on-chain proof
@@ -484,7 +484,7 @@ function Footer() {
     <footer className="border-t border-black/5 bg-white py-10">
       <Container className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span className="grid h-6 w-6 place-items-center rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 text-xs font-bold text-white">天</span>
+          <span className="grid h-6 w-6 place-items-center rounded-md bg-gradient-to-br from-gray-700 to-gray-900 text-xs font-bold text-white">天</span>
           Tenki 天機
         </div>
         <p className="text-xs text-gray-400">Paper-mode research tool. Not financial advice.</p>
