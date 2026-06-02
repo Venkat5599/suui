@@ -247,8 +247,8 @@ export function Hero3() {
       {/* WebGL Canvas Background - Fullscreen */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 w-full h-full z-0"
-        style={{ position: "fixed", top: 0, left: 0 }}
+        className="absolute inset-0 w-full h-full z-0"
+        style={{ position: "absolute", top: 0, left: 0 }}
       />
 
       {/* Content Overlay with Frame */}

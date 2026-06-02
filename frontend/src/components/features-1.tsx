@@ -15,44 +15,44 @@ import {
 export function Features1() {
   const features = [
     {
-      icon: Shield,
-      title: "Threat Detection",
-      description: "Real-time monitoring for suspicious activities.",
-    },
-    {
-      icon: Lock,
-      title: "Data Encryption",
-      description: "End-to-end encryption for sensitive data.",
-    },
-    {
       icon: Eye,
-      title: "Security Monitoring",
-      description: "24/7 surveillance of your infrastructure.",
+      title: "Agentic research loop",
+      description: "Plans, runs tools, and reasons in one autonomous pass.",
     },
     {
       icon: Database,
-      title: "Secure Backups",
-      description: "Automated backups with instant recovery.",
-    },
-    {
-      icon: AlertTriangle,
-      title: "Breach Prevention",
-      description: "Proactive defense against cyber attacks.",
-    },
-    {
-      icon: FileCheck,
-      title: "Compliance Management",
-      description: "GDPR, SOC 2, and ISO compliance tools.",
+      title: "Real backtesting",
+      description: "Crypto, US, and A-share engines with full metrics.",
     },
     {
       icon: Fingerprint,
-      title: "Identity Protection",
-      description: "Multi-factor authentication and access control.",
+      title: "Alpha Zoo",
+      description: "Browse, benchmark, and export factor strategies.",
     },
     {
       icon: ShieldCheck,
-      title: "Vulnerability Scanning",
-      description: "Continuous scanning to identify security gaps.",
+      title: "On-chain signal vault",
+      description: "Every backtest hashed to Walrus, anchored on 3 chains.",
+    },
+    {
+      icon: Shield,
+      title: "Paper-safe by default",
+      description: "Runs in paper mode with a live HALT switch.",
+    },
+    {
+      icon: FileCheck,
+      title: "Multi-market data",
+      description: "A-share, crypto, US/HK with automatic source fallback.",
+    },
+    {
+      icon: Lock,
+      title: "Swarm teams",
+      description: "Multi-agent committees debate and decide together.",
+    },
+    {
+      icon: AlertTriangle,
+      title: "Any model, auto-fallback",
+      description: "OpenAI-compatible gateway that never stops mid-run.",
     },
   ];
 
@@ -68,7 +68,7 @@ export function Features1() {
             transition={{ duration: 0.4 }}
             className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mb-4"
           >
-            Enterprise Security Platform
+            Capabilities
           </motion.p>
 
           <motion.h2
@@ -78,7 +78,7 @@ export function Features1() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-neutral-900 dark:text-white mb-6"
           >
-            Protect what matters most
+            A professional agent team, on tap
           </motion.h2>
 
           <motion.p
@@ -88,8 +88,7 @@ export function Features1() {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl"
           >
-            Comprehensive cybersecurity solutions that protect your business
-            from evolving threats while ensuring complete compliance.
+            Everything you need to go from a sentence to a provable, on-chain trading signal.
           </motion.p>
         </div>
 

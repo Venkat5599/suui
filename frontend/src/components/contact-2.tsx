@@ -25,9 +25,9 @@ export default function Contact2() {
                 transition={{ duration: 0.4 }}
                 className="mb-4 text-2xl font-normal text-neutral-900 dark:text-white sm:text-3xl"
               >
-                Ready to create
+                Ready to read the
                 <br />
-                something amazing?
+                hidden mechanism?
               </motion.h2>
             </div>
 
@@ -51,8 +51,8 @@ export default function Contact2() {
               {/* Address and Social Links */}
               <div className="space-y-4">
                 <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                  <p>Pixel Studio Creative</p>
-                  <p>42 Design Ave, San Francisco, CA</p>
+                  <p>Tenki 天機</p>
+                  <p>Autonomous quant research · on-chain proof</p>
                 </div>
 
                 <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-neutral-600 dark:text-neutral-400">
