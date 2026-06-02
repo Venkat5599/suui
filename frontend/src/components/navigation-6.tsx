@@ -67,10 +67,10 @@ export function Navigation6() {
   ];
 
   const topNavItems = [
-    { label: "About", href: "#about" },
     { label: "Features", href: "#features" },
+    { label: "How it works", href: "#how" },
+    { label: "On-chain", href: "#onchain" },
     { label: "Pricing", href: "#pricing" },
-    { label: "Blog", href: "#blog" },
   ];
 
   useEffect(() => {
@@ -156,11 +156,10 @@ export function Navigation6() {
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
               aria-label="Home"
             >
-              <img
-                src="/mock-logos/spherule.svg"
-                alt="Company logo"
-                className="h-8 w-auto dark:invert"
-              />
+              <span className="flex items-center gap-2 text-lg font-semibold tracking-tight text-neutral-900 dark:text-white">
+                <span className="grid h-8 w-8 place-items-center rounded-xl bg-neutral-900 text-sm font-bold text-white dark:bg-white dark:text-neutral-900">天</span>
+                Tenki <span className="font-normal text-neutral-400">天機</span>
+              </span>
             </motion.a>
 
             {/* Desktop Nav Items */}

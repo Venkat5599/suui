@@ -164,7 +164,9 @@ export function Hero3() {
           0.6 + waves * uBlueFactor + cos(squareUvs.y * 3.14) * 0.3 + mouseEffect * 0.4
         );
 
-        gl_FragColor = vec4(finalColor, 1.0);
+        // Monochrome: collapse to luminance so the hero reads black/white/gray.
+        float gray = dot(finalColor, vec3(0.299, 0.587, 0.114));
+        gl_FragColor = vec4(vec3(gray), 1.0);
       }
     `;
 
@@ -255,18 +257,16 @@ export function Hero3() {
           {/* Header with Label and Button */}
           <div className="p-[4vmax] text-[max(1.2rem,1.3vmax)] text-white flex justify-between">
             <div className="leading-tight">
-              Neural__Lab
+              Tenki 天機
               <br />
-              Experiments
+              Autonomous Quant
             </div>
             <div>
               <a
                 className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors duration-200 text-[max(0.9rem,1vmax)] font-medium"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/dashboard"
               >
-                Get Started
+                Launch App
               </a>
             </div>
           </div>
@@ -344,9 +344,9 @@ export function Hero3() {
         <div className="flex flex-col items-start md:flex-row">
           {/* Title */}
           <h1 className="pb-[4vmax] pl-[4vmax] pr-[4vmax] text-white relative text-[5vmax] leading-tight">
-            Neural Network
+            Read the market&apos;s
             <br />
-            Visualization Engine
+            hidden mechanism
             {/* Title Decorative Corners */}
             <div
               className="hidden md:block absolute bottom-0 right-0 h-12 w-12"
@@ -397,7 +397,7 @@ export function Hero3() {
                   className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
                 >
                   <span className="relative">
-                    Documentation
+                    Backtest
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-900 dark:bg-white group-hover:w-full transition-all duration-300 origin-left" />
                   </span>
                   <ArrowUpRight className="w-[max(1rem,1.4vmax)] h-[max(1rem,1.4vmax)]" />
@@ -415,7 +415,7 @@ export function Hero3() {
                   className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
                 >
                   <span className="relative">
-                    API Reference
+                    On-chain
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-900 dark:bg-white group-hover:w-full transition-all duration-300 origin-left" />
                   </span>
                   <ArrowUpRight className="w-[max(1rem,1.4vmax)] h-[max(1rem,1.4vmax)]" />
@@ -433,7 +433,7 @@ export function Hero3() {
                   className="group flex items-center gap-[max(0.6rem,0.8vmax)] pb-[max(0.1rem,0.2vmax)] relative text-neutral-900 dark:text-white"
                 >
                   <span className="relative">
-                    Get Started
+                    Launch App
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-900 dark:bg-white group-hover:w-full transition-all duration-300 origin-left" />
                   </span>
                   <ArrowUpRight className="w-[max(1rem,1.4vmax)] h-[max(1rem,1.4vmax)]" />
