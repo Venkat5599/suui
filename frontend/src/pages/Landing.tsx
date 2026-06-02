@@ -53,8 +53,8 @@ function Header() {
     >
       <Container className="flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight text-white">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-indigo-500 text-sm font-bold text-white">V</span>
-          Vibe-Trading
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-indigo-500 text-sm font-bold text-white">天</span>
+          Tenki <span className="text-white/50">天機</span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-white/60 md:flex">
           <a href="#features" className="transition hover:text-white">Features</a>
@@ -99,9 +99,9 @@ function Hero() {
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="max-w-3xl text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
         >
-          Vibe trading with your
+          Read the market&apos;s
           <span className="block">
-            professional <em className="italic text-indigo-300">financial agent</em> team
+            hidden <em className="italic text-indigo-300">mechanism</em>
           </span>
         </motion.h1>
 
@@ -350,8 +350,8 @@ function Footer() {
     <footer className="border-t border-white/10 py-10">
       <Container className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex items-center gap-2 text-sm text-white/50">
-          <span className="grid h-6 w-6 place-items-center rounded-md bg-indigo-500 text-xs font-bold text-white">V</span>
-          Vibe-Trading
+          <span className="grid h-6 w-6 place-items-center rounded-md bg-indigo-500 text-xs font-bold text-white">天</span>
+          Tenki 天機
         </div>
         <p className="text-xs text-white/35">Paper-mode research tool. Not financial advice.</p>
         <a href="https://github.com/Venkat5599/Vibe-Trading" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm text-white/50 transition hover:text-white">
