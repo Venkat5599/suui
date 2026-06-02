@@ -167,7 +167,6 @@ docker-compose.yml
 ## 📜 License & credits
 
 MIT. Tenki builds on the open-source
-[Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) research agent by HKUDS,
 extended with the on-chain signal vault (Walrus + Mantle/Sui/Somnia), the alpha
 bench runner, per-user auth, and the Tenki product layer.
 
