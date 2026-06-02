@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/icon.png" width="120" alt="Tenki logo"/>
-</p>
-
 <h1 align="center">Tenki 天機</h1>
 
 <p align="center">
