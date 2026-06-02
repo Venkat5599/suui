@@ -89,7 +89,7 @@ const ZOO_CARDS: ZooCard[] = [
 const UNIVERSE_OPTIONS = [
   { value: "sp500", label: "S&P 500 (US)" },
   { value: "csi300", label: "CSI 300 (China A) — needs TUSHARE_TOKEN" },
-  { value: "btc-usdt", label: "BTC-USDT (Crypto, single-asset)" },
+  { value: "btc-usdt", label: "Crypto basket (BTC·ETH·SOL·MNT·SUI·SOMI…)" },
 ];
 
 const PAGE_SIZE = 50;

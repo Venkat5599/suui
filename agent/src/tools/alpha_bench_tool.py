@@ -406,12 +406,48 @@ def _fetch_sp500_constituents() -> list[str]:
     return []
 
 
-def _load_btc_panel(start: str, end: str) -> dict[str, pd.DataFrame]:
-    """Single-instrument BTC-USDT panel via OKX. Adds vwap = typical price."""
-    from backtest.loaders.registry import resolve_loader
+# Multi-symbol crypto basket so the "crypto" universe has enough instruments
+# for cross-sectional IC. Includes majors plus the Tenki anchor chains
+# (MNT / SUI / SOMI). Fetched from a single exchange (CCXT_EXCHANGE, e.g. gate)
+# so daily timestamps align.
+_CRYPTO_BASKET = [
+    "BTC-USDT", "ETH-USDT", "SOL-USDT", "BNB-USDT", "XRP-USDT", "ADA-USDT",
+    "DOGE-USDT", "AVAX-USDT", "LINK-USDT", "DOT-USDT", "MNT-USDT", "SUI-USDT",
+    "SOMI-USDT",
+]
 
-    loader = resolve_loader("crypto")
-    fetched = _retry(lambda: loader.fetch(["BTC-USDT"], start, end)) or {}
+
+def _load_btc_panel(start: str, end: str) -> dict[str, pd.DataFrame]:
+    """Multi-symbol crypto basket panel. Adds vwap = typical price.
+
+    Walks the crypto loader chain so symbols missing on the primary exchange
+    (OKX) still resolve via the next (ccxt/gate). Drops any symbol with no data
+    in the window (e.g. SOMI before its listing) and keeps the rest.
+    """
+    from backtest.loaders.registry import FALLBACK_CHAINS, LOADER_REGISTRY, _ensure_registered
+
+    _ensure_registered()
+    # Prefer a single ccxt exchange (gate) so all symbols share one calendar.
+    chain = list(FALLBACK_CHAINS.get("crypto", []))
+    if "ccxt" in chain:
+        chain = ["ccxt"] + [n for n in chain if n != "ccxt"]
+
+    fetched: dict[str, pd.DataFrame] = {}
+    for name in chain:
+        if name not in LOADER_REGISTRY:
+            continue
+        missing = [c for c in _CRYPTO_BASKET if c not in fetched]
+        if not missing:
+            break
+        try:
+            loader = LOADER_REGISTRY[name]()
+            res = _retry(lambda: loader.fetch(missing, start, end)) or {}
+            for code, df in res.items():
+                if df is not None and not df.empty:
+                    fetched[code] = df
+        except Exception:
+            continue
+
     panel = _wide_from_fetched(fetched, include_amount=False)
     if all(k in panel for k in ("open", "high", "low", "close")):
         panel["vwap"] = (panel["open"] + panel["high"] + panel["low"] + panel["close"]) / 4.0
