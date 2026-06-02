@@ -257,6 +257,18 @@ export function Agent() {
 
   const urlSessionId = searchParams.get("session");
 
+  /* Prefill the composer from a ?prompt= param (landing page chat box). */
+  useEffect(() => {
+    const p = searchParams.get("prompt");
+    if (p) {
+      setInput(p);
+      const next = new URLSearchParams(searchParams);
+      next.delete("prompt");
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* Smart scroll — only auto-scroll when near bottom */
   const isNearBottom = useCallback(() => {
     const el = listRef.current;
