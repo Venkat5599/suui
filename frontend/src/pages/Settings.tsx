@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Database, KeyRound, Loader2, RotateCcw, Save, Server, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { api, isAuthRequiredError, type DataSourceSettings, type LLMProviderOption, type LLMSettings } from "@/lib/api";
-import { getApiAuthKey, setApiAuthKey } from "@/lib/apiAuth";
 
 interface LLMFormState {
   provider: string;
@@ -36,7 +35,6 @@ export function Settings() {
   const [dataSettings, setDataSettings] = useState<DataSourceSettings | null>(null);
   const [form, setForm] = useState<LLMFormState | null>(null);
   const [apiKey, setApiKey] = useState("");
-  const [localApiKey, setLocalApiKeyState] = useState(() => getApiAuthKey());
   const [clearApiKey, setClearApiKey] = useState(false);
   const [tushareToken, setTushareToken] = useState("");
   const [clearTushareToken, setClearTushareToken] = useState(false);
@@ -99,12 +97,6 @@ export function Settings() {
     setClearApiKey(false);
   };
 
-  const submitLocalApiKey = (event: FormEvent) => {
-    event.preventDefault();
-    setApiAuthKey(localApiKey);
-    toast.success("Local API key saved");
-    window.location.reload();
-  };
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -147,39 +139,6 @@ export function Settings() {
     }
   };
 
-  const localApiAccessSection = (
-    <form onSubmit={submitLocalApiKey} className="rounded-lg border bg-card p-5 shadow-sm">
-      <div className="mb-4 space-y-1">
-        <div className="flex items-center gap-2">
-          <KeyRound className="h-4 w-4 text-primary" />
-          <h2 className="text-base font-semibold">{"Local API access"}</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">{"For remote or private Web UI deployments, enter the server API key once in this browser. Localhost use can stay blank."}</p>
-      </div>
-      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-        <label className="grid gap-2">
-          <span className={labelClass}>{"Server API key"}</span>
-          <input
-            type="password"
-            value={localApiKey}
-            onChange={(event) => setLocalApiKeyState(event.target.value)}
-            className={fieldClass}
-            placeholder={"Stored only in this browser. Leave blank to clear it."}
-            autoComplete="current-password"
-          />
-        </label>
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center gap-2 self-end rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-        >
-          <Save className="h-4 w-4" />
-          {"Save local key"}
-        </button>
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">{"Stored only in this browser. Leave blank to clear it."}</p>
-    </form>
-  );
-
   if (loading || !form || !settings || !dataSettings) {
     return (
       <div className="mx-auto max-w-5xl space-y-6 p-6">
@@ -187,7 +146,6 @@ export function Settings() {
           <h1 className="text-2xl font-semibold tracking-tight">{"Settings"}</h1>
           <p className="max-w-3xl text-sm text-muted-foreground">{"Configure model credentials and market data source tokens for this local project."}</p>
         </div>
-        {localApiAccessSection}
         <div className="flex min-h-32 items-center justify-center rounded-lg border bg-card p-5 text-sm text-muted-foreground">
           {settingsLoadError ? (
             <div className="text-center">
@@ -223,8 +181,6 @@ export function Settings() {
         <h1 className="text-2xl font-semibold tracking-tight">{"Settings"}</h1>
         <p className="max-w-3xl text-sm text-muted-foreground">{"Configure model credentials and market data source tokens for this local project."}</p>
       </div>
-
-      {localApiAccessSection}
 
       <div className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">{"LLM Settings"}</h2>

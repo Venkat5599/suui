@@ -11,7 +11,7 @@ import { ConnectionBanner } from "@/components/layout/ConnectionBanner";
 const APP_VERSION = "v0.1.8";
 
 const NAV = [
-  { to: "/", icon: BarChart3, label: "Home" },
+  { to: "/dashboard", icon: BarChart3, label: "Home" },
   { to: "/agent", icon: Bot, label: "Agent" },
   { to: "/alpha-zoo", icon: Layers, label: "Alpha Zoo" },
   { to: "/settings", icon: Settings, label: "Settings" },
@@ -76,7 +76,7 @@ export function Layout() {
       )}>
         {/* Brand */}
         <div className={cn("border-b", collapsed ? "p-2 flex justify-center" : "p-4")}>
-          <Link to="/" className={cn("flex items-center font-bold text-base tracking-tight", collapsed ? "justify-center" : "gap-2")}>
+          <Link to="/dashboard" className={cn("flex items-center font-bold text-base tracking-tight", collapsed ? "justify-center" : "gap-2")}>
             <BarChart3 className="h-5 w-5 text-primary shrink-0" />
             {!collapsed && "Vibe-Trading"}
           </Link>

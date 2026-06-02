@@ -85,3 +85,6 @@ frontend/.env.production
 .env.production
 # local backups
 *.bak.*
+
+frontend/.env.local
+.env.local
