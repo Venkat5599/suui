@@ -87,9 +87,9 @@ const ZOO_CARDS: ZooCard[] = [
 ];
 
 const UNIVERSE_OPTIONS = [
-  { value: "csi300", label: "CSI 300 (China A)" },
   { value: "sp500", label: "S&P 500 (US)" },
-  { value: "btc-usdt", label: "BTC-USDT (Crypto)" },
+  { value: "csi300", label: "CSI 300 (China A) — needs TUSHARE_TOKEN" },
+  { value: "btc-usdt", label: "BTC-USDT (Crypto, single-asset)" },
 ];
 
 const PAGE_SIZE = 50;
@@ -581,9 +581,24 @@ function BenchView() {
   const { search: locSearch } = useLocation();
   const initial = useMemo(() => {
     const q = new URLSearchParams(locSearch);
+    // Alpha metadata uses universe tags (equity_cn / equity_us / equity_hk /
+    // crypto) but the bench API only accepts csi300 / sp500 / btc-usdt. Map so a
+    // "Run bench" link from a detail page lands on a valid universe.
+    const UNIVERSE_MAP: Record<string, string> = {
+      equity_cn: "csi300",
+      equity_us: "sp500",
+      equity_hk: "csi300",
+      crypto: "btc-usdt",
+      "btc-usdt": "btc-usdt",
+      csi300: "csi300",
+      sp500: "sp500",
+    };
+    const rawUniverse = (q.get("universe") || "sp500").toLowerCase();
     return {
       zoo: q.get("zoo") || "alpha101",
-      universe: q.get("universe") || "csi300",
+      // Default to sp500 — it runs on yfinance with no API token. csi300 needs a
+      // TUSHARE_TOKEN and btc-usdt is single-asset (no cross-sectional IC).
+      universe: UNIVERSE_MAP[rawUniverse] || "sp500",
       period: q.get("period") || "2020-2025",
       top: Number(q.get("top") || "20"),
     };

@@ -23,7 +23,15 @@ async function errorFromResponse(res: Response): Promise<ApiError> {
   let detail = `HTTP ${res.status}`;
   try {
     const body = await res.json();
-    detail = body.detail || body.message || detail;
+    const raw = body.detail ?? body.message ?? detail;
+    if (Array.isArray(raw)) {
+      // FastAPI 422 validation errors are arrays of { loc, msg, ... }.
+      detail = raw.map((e) => (typeof e === "string" ? e : e?.msg || JSON.stringify(e))).join("; ");
+    } else if (typeof raw === "object" && raw !== null) {
+      detail = (raw as { msg?: string }).msg || JSON.stringify(raw);
+    } else {
+      detail = String(raw);
+    }
   } catch { /* ignore */ }
   if (res.status === 401 || res.status === 403) {
     detail = AUTH_REQUIRED_MESSAGE;
