@@ -18,9 +18,18 @@ export function setApiAuthKey(value: string): void {
   }
 }
 
+// Current signed-in user id (Clerk). Set once auth resolves; included on every
+// request so the backend scopes sessions per user. Empty = anonymous/shared.
+let currentUserId = "";
+export function setCurrentUserId(id: string): void {
+  currentUserId = (id || "").trim();
+}
+
 export function authHeaders(): Record<string, string> {
   const key = getApiAuthKey();
-  return key ? { Authorization: `Bearer ${key}` } : {};
+  const h: Record<string, string> = key ? { Authorization: `Bearer ${key}` } : {};
+  if (currentUserId) h["X-User-Id"] = currentUserId;
+  return h;
 }
 
 export function authQuerySuffix(): string {

@@ -1591,12 +1591,16 @@ def _get_existing_session_or_404(session_id: str):
 
 
 @app.post("/sessions", response_model=SessionResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_auth)])
-async def create_session(request: CreateSessionRequest):
-    """Create a chat session."""
+async def create_session(request: CreateSessionRequest, http_request: Request):
+    """Create a chat session, tagged with the caller's user id (per-user scoping)."""
     svc = _get_session_service()
     if not svc:
         raise HTTPException(status_code=501, detail="Session runtime not enabled")
-    session = svc.create_session(title=request.title, config=request.config)
+    cfg = dict(request.config or {})
+    uid = http_request.headers.get("X-User-Id", "").strip()
+    if uid:
+        cfg["user_id"] = uid
+    session = svc.create_session(title=request.title, config=cfg)
     return SessionResponse(
         session_id=session.session_id,
         title=session.title,
@@ -1608,12 +1612,19 @@ async def create_session(request: CreateSessionRequest):
 
 
 @app.get("/sessions", response_model=List[SessionResponse], dependencies=[Depends(require_auth)])
-async def list_sessions(limit: int = Query(50, ge=1, le=200)):
-    """List sessions."""
+async def list_sessions(http_request: Request, limit: int = Query(50, ge=1, le=200)):
+    """List sessions, scoped to the caller's user id when one is supplied.
+
+    A signed-in user (X-User-Id header) sees only their own sessions. Without the
+    header (anonymous/local), all sessions are returned for backwards compatibility.
+    """
     svc = _get_session_service()
     if not svc:
         raise HTTPException(status_code=501, detail="Session runtime not enabled")
     sessions = svc.list_sessions(limit=limit)
+    uid = http_request.headers.get("X-User-Id", "").strip()
+    if uid:
+        sessions = [s for s in sessions if (s.config or {}).get("user_id") == uid]
     return [
         SessionResponse(
             session_id=s.session_id,

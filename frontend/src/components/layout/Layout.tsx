@@ -4,8 +4,40 @@ import { BarChart3, Bot, Moon, Sun, Plus, Trash2, Pencil, MessageSquare, Chevron
 import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { api, type SessionItem } from "@/lib/api";
+import { setCurrentUserId } from "@/lib/apiAuth";
 import { useAgentStore } from "@/stores/agent";
 import { ConnectionBanner } from "@/components/layout/ConnectionBanner";
+import { UserButton, useUser } from "@clerk/clerk-react";
+
+const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+
+/** User avatar + name + sign-out (Clerk). Only mounted when Clerk is configured. */
+function UserChip({ collapsed }: { collapsed: boolean }) {
+  const { user } = useUser();
+  useEffect(() => {
+    setCurrentUserId(user?.id || "");
+  }, [user?.id]);
+  if (collapsed) {
+    return (
+      <div className="flex justify-center">
+        <UserButton afterSignOutUrl="/" />
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2 rounded-md px-1 py-1">
+      <UserButton afterSignOutUrl="/" />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-xs font-medium text-foreground">
+          {user?.fullName || user?.firstName || "Account"}
+        </div>
+        <div className="truncate text-[10px] text-muted-foreground">
+          {user?.primaryEmailAddress?.emailAddress || ""}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Bump on each release; one place keeps the footer in sync with package.json.
 const APP_VERSION = "v0.1.8";
@@ -205,6 +237,7 @@ export function Layout() {
         <div className={cn("border-t", collapsed ? "p-1 flex flex-col items-center gap-1" : "p-3 space-y-2")}>
           {collapsed ? (
             <>
+              {clerkEnabled && <UserChip collapsed />}
               <button onClick={toggle} className="p-1.5 text-muted-foreground hover:text-foreground rounded transition-colors" title={dark ? "Light" : "Dark"}>
                 {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
               </button>
@@ -214,6 +247,7 @@ export function Layout() {
             </>
           ) : (
             <>
+              {clerkEnabled && <UserChip collapsed={false} />}
               <div className="flex items-center justify-between">
                 <button
                   onClick={toggle}
