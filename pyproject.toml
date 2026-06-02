@@ -27,7 +27,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "httpx>=0.28.0",
     "oauth-cli-kit>=0.1.3",
-    "pandas>=2.0.0",
+    "pandas>=2.0.0,<3.0",  # akshare uses fillna/replace(method=), removed in pandas 3.x
     "openpyxl>=3.1.0",
     "python-docx>=1.1.0",
     "python-pptx>=0.6.23",

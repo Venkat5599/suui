@@ -79,3 +79,9 @@ AGENTS.md
 # Alpha Zoo wiki artifacts (generated, not source)
 wiki/alpha-library/manifest.json
 wiki/alpha-library/content/
+
+# Deployment secret (baked demo auth key) — keep out of VCS
+frontend/.env.production
+.env.production
+# local backups
+*.bak.*

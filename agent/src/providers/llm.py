@@ -294,11 +294,18 @@ def build_llm(*, model_name: Optional[str] = None, callbacks: Any = None) -> Any
     # Optional reasoning activation for relays requiring opt-in (e.g. OpenRouter).
     # Moonshot/DeepSeek official APIs emit reasoning by default and ignore this field.
     effort = os.getenv("LANGCHAIN_REASONING_EFFORT", "").strip().lower()
+    # Cap completion tokens. Relays like OpenRouter reserve the model's full max
+    # output (e.g. 65536) against the account's credit balance when this is unset,
+    # which fails with HTTP 402 on free/low-credit accounts. LANGCHAIN_MAX_TOKENS
+    # bounds the reservation; set to 0/empty to leave it to the model default.
+    max_tokens_raw = os.getenv("LANGCHAIN_MAX_TOKENS", "8000").strip()
+    max_tokens = int(max_tokens_raw) if max_tokens_raw.isdigit() and int(max_tokens_raw) > 0 else None
     return ChatOpenAIWithReasoning(
         model=name,
         temperature=temperature,
         timeout=int(os.getenv("TIMEOUT_SECONDS", "120")),
         max_retries=int(os.getenv("MAX_RETRIES", "2")),
+        max_tokens=max_tokens,
         callbacks=callbacks,
         extra_body={"reasoning": {"effort": effort}} if effort else None,
     )
