@@ -113,11 +113,11 @@ const PLANS = [
   },
   {
     name: "On-chain",
-    price: "Free",
-    sub: "Testnet · available now",
+    price: "Coming soon",
+    sub: "Testnet anchoring",
     features: ["Everything in Research", "Walrus signal vault", "Mantle · Sui · Somnia anchors", "Provable manifests"],
-    cta: "Launch app",
-    available: true,
+    cta: "Coming soon",
+    available: false,
     highlight: true,
   },
   {
