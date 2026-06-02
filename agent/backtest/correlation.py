@@ -128,37 +128,61 @@ def compute_correlation_matrix(
     start_date = (datetime.now() - timedelta(days=days + 60)).strftime("%Y-%m-%d")
 
     # Import here to avoid circular
-    from backtest.loaders.registry import resolve_loader
+    from backtest.loaders.registry import (
+        FALLBACK_CHAINS,
+        LOADER_REGISTRY,
+        _ensure_registered,
+    )
+
+    _ensure_registered()  # lazily populate LOADER_REGISTRY before we read it
 
     price_series: Dict[str, pd.DataFrame] = {}
 
-    for code in codes:
-        market = infer_market(code)
-        try:
-            loader = resolve_loader(market)
-        except Exception:
-            # Fall back to yfinance for us_equity / hk_equity
+    def _candidate_loaders(market: str):
+        """Yield every available loader in the market's fallback chain.
+
+        Unlike resolve_loader (which returns only the first), this walks the
+        whole chain so e.g. a crypto ticker missing on OKX (MNT, SOMI) is still
+        fetched via the next exchange (ccxt/gate). yfinance is the final resort.
+        """
+        chain = list(FALLBACK_CHAINS.get(market, []))
+        # For crypto, prefer ccxt (configurable exchange, e.g. gate) so that ALL
+        # tickers come from the SAME exchange — mixing exchanges produces
+        # misaligned daily timestamps and "no overlapping data". gate also lists
+        # the chain tokens (MNT/SUI/SOMI) that OKX is missing.
+        if market == "crypto" and "ccxt" in chain:
+            chain = ["ccxt"] + [n for n in chain if n != "ccxt"]
+        seen: set[str] = set()
+        for name in chain:
+            if name in seen or name not in LOADER_REGISTRY:
+                continue
+            seen.add(name)
             try:
-                from backtest.loaders.registry import LOADER_REGISTRY
-                if "yfinance" in LOADER_REGISTRY:
-                    loader = LOADER_REGISTRY["yfinance"]()
-                else:
-                    continue
+                yield LOADER_REGISTRY[name]()
             except Exception:
                 continue
+        if "yfinance" in LOADER_REGISTRY and "yfinance" not in seen:
+            try:
+                yield LOADER_REGISTRY["yfinance"]()
+            except Exception:
+                pass
 
-        try:
-            result = loader.fetch(
-                codes=[code],
-                start_date=start_date,
-                end_date=end_date,
-                interval="1D",
-                fields=["trade_date", "open", "high", "low", "close", "volume"],
-            )
-            if code in result and not result[code].empty:
-                price_series[code] = result[code]
-        except Exception:
-            continue
+    for code in codes:
+        market = infer_market(code)
+        for loader in _candidate_loaders(market):
+            try:
+                result = loader.fetch(
+                    codes=[code],
+                    start_date=start_date,
+                    end_date=end_date,
+                    interval="1D",
+                    fields=["trade_date", "open", "high", "low", "close", "volume"],
+                )
+                if code in result and not result[code].empty:
+                    price_series[code] = result[code]
+                    break  # got data — stop walking the chain for this code
+            except Exception:
+                continue
 
     if len(price_series) < 2:
         raise ValueError(

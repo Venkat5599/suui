@@ -4,6 +4,13 @@ import { CorrelationMatrix } from "@/components/charts/CorrelationMatrix";
 
 const WINDOWS = [30, 60, 90, 180, 365] as const;
 
+const PRESETS = [
+  { label: "Tenki chains (MNT·SUI·SOMI)", codes: "MNT-USDT,SUI-USDT,SOMI-USDT" },
+  { label: "Chains vs majors", codes: "MNT-USDT,SUI-USDT,SOMI-USDT,BTC-USDT,ETH-USDT" },
+  { label: "Crypto + equities", codes: "BTC-USDT,ETH-USDT,SPY,AAPL" },
+  { label: "L1 majors", codes: "BTC-USDT,ETH-USDT,SUI-USDT,SOL-USDT" },
+] as const;
+
 export function Correlation() {
   const [codes, setCodes] = useState("BTC-USDT,ETH-USDT,SPY,AAPL");
   const [days, setDays] = useState<number>(90);
@@ -52,6 +59,19 @@ export function Correlation() {
           <p className="text-xs text-muted-foreground">
             Comma-separated ticker symbols, e.g. BTC-USDT,ETH-USDT,AAPL,SPY
           </p>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <span className="text-xs text-muted-foreground">Presets:</span>
+            {PRESETS.map((p) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => setCodes(p.codes)}
+                className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-4">
