@@ -9,15 +9,18 @@ interface Example {
 interface Category {
   label: string;
   icon: React.ReactNode;
-  color: string;
   examples: Example[];
 }
+
+// Unified indigo accent so the dashboard matches the landing's ai-saas aesthetic.
+const CARD_ACCENT =
+  "border-indigo-500/20 hover:border-indigo-500/50 hover:bg-indigo-500/10";
+const LABEL_ACCENT = "text-indigo-300";
 
 const CATEGORIES: Category[] = [
   {
     label: "Multi-Market Backtest",
     icon: <TrendingUp className="h-4 w-4" />,
-    color: "text-red-400 border-red-500/30 hover:border-red-500/60 hover:bg-red-500/5",
     examples: [
       {
         title: "Cross-Market Portfolio",
@@ -39,7 +42,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Research & Analysis",
     icon: <Sparkles className="h-4 w-4" />,
-    color: "text-amber-400 border-amber-500/30 hover:border-amber-500/60 hover:bg-amber-500/5",
     examples: [
       {
         title: "Multi-Factor Alpha Model",
@@ -56,7 +58,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Swarm Teams",
     icon: <Users className="h-4 w-4" />,
-    color: "text-violet-400 border-violet-500/30 hover:border-violet-500/60 hover:bg-violet-500/5",
     examples: [
       {
         title: "Investment Committee Review",
@@ -73,7 +74,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Document & Web Research",
     icon: <Globe className="h-4 w-4" />,
-    color: "text-blue-400 border-blue-500/30 hover:border-blue-500/60 hover:bg-blue-500/5",
     examples: [
       {
         title: "Analyze an Earnings Report PDF",
@@ -90,7 +90,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Trade Journal",
     icon: <NotebookPen className="h-4 w-4" />,
-    color: "text-orange-400 border-orange-500/30 hover:border-orange-500/60 hover:bg-orange-500/5",
     examples: [
       {
         title: "Analyze My Broker Export",
@@ -107,7 +106,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Trading Connectors",
     icon: <Landmark className="h-4 w-4" />,
-    color: "text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 hover:bg-cyan-500/5",
     examples: [
       {
         title: "Check Selected Connector",
@@ -129,7 +127,6 @@ const CATEGORIES: Category[] = [
   {
     label: "Shadow Account",
     icon: <UserCircle2 className="h-4 w-4" />,
-    color: "text-emerald-400 border-emerald-500/30 hover:border-emerald-500/60 hover:bg-emerald-500/5",
     examples: [
       {
         title: "Train My Shadow from Journal",
@@ -177,7 +174,7 @@ export function WelcomeScreen({ onExample }: Props) {
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 text-center">
       {/* Header */}
       <div className="space-y-3">
-        <div className="h-16 w-16 mx-auto rounded-2xl bg-gradient-to-br from-primary/80 to-info/80 flex items-center justify-center shadow-lg">
+        <div className="h-16 w-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-1 ring-white/10">
           <Bot className="h-8 w-8 text-white" />
         </div>
         <div>
@@ -196,7 +193,7 @@ export function WelcomeScreen({ onExample }: Props) {
         {CAPABILITY_CHIPS.map((chip) => (
           <span
             key={chip}
-            className="px-2.5 py-1 text-xs rounded-full border border-border/60 text-muted-foreground bg-muted/30"
+            className="px-2.5 py-1 text-xs rounded-full border border-indigo-500/20 text-muted-foreground bg-indigo-500/5 transition-colors hover:border-indigo-500/40 hover:text-foreground"
           >
             {chip}
           </span>
@@ -209,7 +206,7 @@ export function WelcomeScreen({ onExample }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {CATEGORIES.map((cat) => (
             <div key={cat.label} className="space-y-2">
-              <div className={`flex items-center gap-1.5 text-xs font-medium px-1 ${cat.color.split(" ").filter(c => c.startsWith("text-")).join(" ")}`}>
+              <div className={`flex items-center gap-1.5 text-xs font-medium px-1 ${LABEL_ACCENT}`}>
                 {cat.icon}
                 <span>{cat.label}</span>
               </div>
@@ -218,7 +215,7 @@ export function WelcomeScreen({ onExample }: Props) {
                   <button
                     key={ex.title}
                     onClick={() => onExample(ex.prompt)}
-                    className={`block w-full text-left px-3 py-2.5 rounded-xl border transition-colors ${cat.color}`}
+                    className={`block w-full text-left px-3 py-2.5 rounded-xl border bg-card/40 transition-colors ${CARD_ACCENT}`}
                   >
                     <span className="text-sm font-medium text-foreground leading-snug">
                       {ex.title}
