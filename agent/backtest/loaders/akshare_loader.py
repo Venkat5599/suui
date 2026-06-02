@@ -146,21 +146,48 @@ class DataLoader:
     def _fetch_a_share(
         self, ak, code: str, start_date: str, end_date: str, interval: str,
     ) -> Optional[pd.DataFrame]:
-        """Fetch A-share via stock_zh_a_hist."""
+        """Fetch A-share via stock_zh_a_hist (eastmoney); fall back to stock_zh_a_daily (sina).
+
+        eastmoney is geo-blocked from some datacenter IPs (RemoteDisconnected). The
+        sina daily endpoint serves the same data and stays reachable, so we use it
+        as an automatic fallback to keep A-share backtests working anywhere.
+        """
         symbol = code.split(".")[0]
         period = _INTERVAL_MAP_DAILY.get(interval, "daily")
         sd = start_date.replace("-", "")
         ed = end_date.replace("-", "")
-        df = ak.stock_zh_a_hist(
-            symbol=symbol,
-            period=period,
-            start_date=sd,
-            end_date=ed,
-            adjust="qfq",
-        )
-        if df is None or df.empty:
+
+        # Primary: eastmoney (richer, intraday-capable).
+        try:
+            df = ak.stock_zh_a_hist(
+                symbol=symbol,
+                period=period,
+                start_date=sd,
+                end_date=ed,
+                adjust="qfq",
+            )
+            if df is not None and not df.empty:
+                return self._normalize(df, date_col="日期")
+        except Exception:
+            pass  # fall through to sina
+
+        # Fallback: sina daily (needs an exchange prefix; daily only).
+        if "." in code:
+            prefix = "sh" if code.rsplit(".", 1)[-1].upper() in ("SH", "SS") else "sz"
+        else:
+            prefix = "sh" if symbol[:1] in ("6", "9") else "sz"
+        try:
+            df = ak.stock_zh_a_daily(
+                symbol=f"{prefix}{symbol}",
+                start_date=sd,
+                end_date=ed,
+                adjust="qfq",
+            )
+            if df is not None and not df.empty:
+                return self._normalize(df, date_col="date")
+        except Exception:
             return None
-        return self._normalize(df, date_col="日期")
+        return None
 
     def _fetch_us(self, ak, code: str, start_date: str, end_date: str) -> Optional[pd.DataFrame]:
         """Fetch US stock via stock_us_hist."""
