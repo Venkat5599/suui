@@ -88,3 +88,6 @@ frontend/.env.production
 
 frontend/.env.local
 .env.local
+
+# Internal hackathon submission notes — keep private
+SUBMISSIONS.md

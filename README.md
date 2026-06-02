@@ -73,11 +73,14 @@ so anyone can fetch the manifest from any aggregator and prove it matches what t
 agent committed. The chain holds the tamper-evident, ownership-bearing pointer;
 Walrus holds the bytes.
 
-| Chain | Contract | Role |
-|---|---|---|
-| **Mantle Sepolia** | `SignalVault` (Solidity) | EVM anchor |
-| **Sui** testnet | `signal_vault` (Move) | Walrus-native registration via Tatum RPC |
-| **Somnia** Shannon | `SignalVault` (Solidity) | high-throughput EVM anchor |
+| Chain | Contract | Address / Package | Role |
+|---|---|---|---|
+| **Mantle Sepolia** (5003) | `SignalVault` (Solidity) | [`0x36Da3c6EeF7A92e6060b68688573B7f31Bf3B57B`](https://explorer.sepolia.mantle.xyz/address/0x36Da3c6EeF7A92e6060b68688573B7f31Bf3B57B) | EVM anchor |
+| **Somnia Shannon** (50312) | `SignalVault` (Solidity) | [`0x36Da3c6EeF7A92e6060b68688573B7f31Bf3B57B`](https://shannon-explorer.somnia.network/address/0x36Da3c6EeF7A92e6060b68688573B7f31Bf3B57B) | high-throughput EVM anchor |
+| **Sui** testnet | `signal_vault` (Move) | [`0x0e4326568fb219c65f63457849c9878f06ac1c7f8f0c44795d0dc78e18565b87`](https://testnet.suivision.xyz/package/0x0e4326568fb219c65f63457849c9878f06ac1c7f8f0c44795d0dc78e18565b87) | Walrus-native registration via Tatum RPC |
+
+> Mantle and Somnia share the same address because the contract is deployed from the
+> same key at the same nonce on each chain (deterministic CREATE).
 
 The agent reads its own on-chain history and **autonomously decides** whether each
 new signal is novel and good enough to publish — it does not blindly anchor
