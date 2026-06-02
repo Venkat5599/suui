@@ -35,26 +35,26 @@ export function Navigation6() {
 
   const menuItems: MenuItem[] = [
     {
-      label: "Products",
-      href: "#products",
+      label: "Features",
+      href: "#features",
       image:
         "https://images.unsplash.com/photo-1762278804698-fc25d03b69e7?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      label: "Solutions",
-      href: "#solutions",
+      label: "How it works",
+      href: "#how",
       image:
         "https://images.unsplash.com/photo-1762278804771-65c446b6acdb?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      label: "Resources",
-      href: "#resources",
+      label: "On-chain",
+      href: "#onchain",
       image:
         "https://images.unsplash.com/photo-1762278804832-7f9b4cf3b693?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      label: "Company",
-      href: "#company",
+      label: "Pricing",
+      href: "#pricing",
       image:
         "https://images.unsplash.com/photo-1762278804930-fd04fc7111c1?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
@@ -273,12 +273,20 @@ export function Navigation6() {
                       className="pb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8"
                     >
                       <div className="text-sm text-neutral-500 dark:text-neutral-400">
-                        <p>© 2024 All rights reserved</p>
-                        <p className="mt-1">Built with React & Tailwind</p>
+                        <p>© 2026 Tenki 天機 · All rights reserved</p>
+                        <p className="mt-1">Paper-mode research. Not financial advice.</p>
                       </div>
 
                       <nav aria-label="Footer navigation">
                         <ul className="flex flex-wrap gap-4 sm:gap-6">
+                          <li>
+                            <a
+                              href="/dashboard"
+                              className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors outline-none"
+                            >
+                              Launch app
+                            </a>
+                          </li>
                           <li>
                             <a
                               href="#contact"
@@ -289,18 +297,12 @@ export function Navigation6() {
                           </li>
                           <li>
                             <a
-                              href="#careers"
+                              href="https://github.com/Venkat5599/Tenki"
+                              target="_blank"
+                              rel="noreferrer"
                               className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors outline-none"
                             >
-                              Careers
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="#support"
-                              className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors outline-none"
-                            >
-                              Support
+                              GitHub
                             </a>
                           </li>
                         </ul>

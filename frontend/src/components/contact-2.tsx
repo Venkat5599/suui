@@ -11,7 +11,7 @@ export default function Contact2() {
   };
 
   return (
-    <section className="w-full bg-white py-16 dark:bg-neutral-950 sm:py-24">
+    <section id="contact" className="w-full bg-white py-16 dark:bg-neutral-950 sm:py-24">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Column - Company Info */}
