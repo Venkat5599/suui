@@ -310,3 +310,34 @@ def build_llm(*, model_name: Optional[str] = None, callbacks: Any = None) -> Any
         extra_body={"reasoning": {"effort": effort}} if effort else None,
     )
 
+
+def build_fallback_llm(*, callbacks=None):
+    """Build the optional fallback LLM, or return None if not configured.
+
+    When the primary provider errors (auth/credit/5xx/connection), the caller
+    transparently retries on this fallback. Configure via env:
+        LLM_FALLBACK_API_KEY / LLM_FALLBACK_BASE_URL / LLM_FALLBACK_MODEL
+    """
+    fb_key = os.getenv("LLM_FALLBACK_API_KEY", "").strip()
+    fb_base = os.getenv("LLM_FALLBACK_BASE_URL", "").strip()
+    fb_model = os.getenv("LLM_FALLBACK_MODEL", "").strip()
+    if not (fb_key and fb_base and fb_model) or ChatOpenAIWithReasoning is None:
+        return None
+    temperature = float(os.getenv("LANGCHAIN_TEMPERATURE", "0.0"))
+    max_tokens_raw = os.getenv("LANGCHAIN_MAX_TOKENS", "8000").strip()
+    max_tokens = int(max_tokens_raw) if max_tokens_raw.isdigit() and int(max_tokens_raw) > 0 else None
+    logger.info("LLM fallback enabled: %s @ %s", fb_model, _redact_base_url_for_log(fb_base))
+    return ChatOpenAIWithReasoning(
+        model=fb_model,
+        temperature=temperature,
+        timeout=int(os.getenv("TIMEOUT_SECONDS", "120")),
+        max_retries=int(os.getenv("MAX_RETRIES", "2")),
+        max_tokens=max_tokens,
+        api_key=fb_key,
+        base_url=fb_base,
+        # Some gateways (e.g. opengateway) emit a non-standard gzip header that
+        # breaks httpx auto-decompression; force identity to read responses.
+        default_headers={"Accept-Encoding": "identity"},
+        callbacks=callbacks,
+    )
+

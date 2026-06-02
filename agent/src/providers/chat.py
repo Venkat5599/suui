@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from src.providers.llm import build_llm
+from src.providers.llm import build_llm, build_fallback_llm
 
 
 def _dedupe_finish_reason(raw: str) -> str:
@@ -83,6 +83,19 @@ class ChatLLM:
         """
         self.model_name = model_name
         self._llm = build_llm(model_name=model_name)
+        self._fallback = build_fallback_llm()
+
+    def _with_tools(self, tools: Optional[List[Dict[str, Any]]]):
+        """Bind tools and attach the fallback provider (if configured).
+
+        Binding happens on BOTH primary and fallback so tool-calling survives a
+        failover. with_fallbacks transparently retries on primary errors.
+        """
+        primary = self._llm.bind_tools(tools) if tools else self._llm
+        if self._fallback is None:
+            return primary
+        fb = self._fallback.bind_tools(tools) if tools else self._fallback
+        return primary.with_fallbacks([fb])
 
     def chat(self, messages: List[Dict[str, Any]], tools: Optional[List[Dict[str, Any]]] = None, timeout: Optional[int] = None) -> LLMResponse:
         """Call the LLM synchronously.
@@ -95,7 +108,7 @@ class ChatLLM:
         Returns:
             LLMResponse.
         """
-        llm = self._llm.bind_tools(tools) if tools else self._llm
+        llm = self._with_tools(tools)
         config = {"timeout": timeout} if timeout else {}
         ai_message = llm.invoke(messages, config=config)
         return self._parse_response(ai_message)
@@ -122,7 +135,7 @@ class ChatLLM:
             Parsed ``LLMResponse``.
         """
         try:
-            llm = self._llm.bind_tools(tools) if tools else self._llm
+            llm = self._with_tools(tools)
             config = {"timeout": timeout} if timeout else {}
             accumulated = None
             for chunk in llm.stream(messages, config=config):
