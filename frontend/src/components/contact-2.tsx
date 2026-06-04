@@ -51,7 +51,7 @@ export default function Contact2() {
               {/* Address and Social Links */}
               <div className="space-y-4">
                 <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                  <p>Tenki 天機</p>
+                  <p>Tenki</p>
                   <p>Autonomous quant research · on-chain proof</p>
                 </div>
 

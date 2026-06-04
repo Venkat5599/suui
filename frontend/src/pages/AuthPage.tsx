@@ -52,8 +52,8 @@ export function AuthPage({ mode }: { mode: "sign-in" | "sign-up" }) {
       />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-16">
         <Link to="/" className="mb-8 flex items-center gap-2 text-xl font-semibold tracking-tight">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-neutral-900 text-base font-bold text-white shadow-sm">天</span>
-          Tenki <span className="font-normal text-neutral-400">天機</span>
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-neutral-900 text-base font-bold text-white shadow-sm">T</span>
+          Tenki
         </Link>
         <div className="flex w-full justify-center">
           {mode === "sign-in" ? (

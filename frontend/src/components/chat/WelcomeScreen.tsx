@@ -178,7 +178,7 @@ export function WelcomeScreen({ onExample }: Props) {
           <Bot className="h-8 w-8 text-background" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Tenki <span className="text-muted-foreground">天機</span></h2>
+          <h2 className="text-2xl font-bold tracking-tight">Tenki</h2>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto leading-relaxed">
             read the market&apos;s hidden mechanism — your professional financial agent team
           </p>

@@ -144,7 +144,7 @@ export default function Footer8() {
               textShadow:
                 "0 -1.5px 0 rgba(115,115,115,0.7), 1.5px 0 0 rgba(115,115,115,0.7), 0 1.5px 0 rgba(115,115,115,0.7), -1.5px 0 0 rgba(115,115,115,0.7), 1px 1px 0 rgba(115,115,115,0.7), -1px -1px 0 rgba(115,115,115,0.7), 1px -1px 0 rgba(115,115,115,0.7), -1px 1px 0 rgba(115,115,115,0.7)",
             }}
-          >Tenki 天機</div>
+          >Tenki</div>
           <div
             className="absolute inset-0 hidden dark:flex justify-center font-bold uppercase leading-none whitespace-nowrap text-black"
             style={{
@@ -154,11 +154,11 @@ export default function Footer8() {
               textShadow:
                 "0 -1.5px 0 rgba(163,163,163,0.55), 1.5px 0 0 rgba(163,163,163,0.55), 0 1.5px 0 rgba(163,163,163,0.55), -1.5px 0 0 rgba(163,163,163,0.55), 1px 1px 0 rgba(163,163,163,0.55), -1px -1px 0 rgba(163,163,163,0.55), 1px -1px 0 rgba(163,163,163,0.55), -1px 1px 0 rgba(163,163,163,0.55)",
             }}
-          >Tenki 天機</div>
+          >Tenki</div>
         </div>
 
         <div className="pt-6 border-t border-neutral-200 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm text-neutral-500 dark:text-white/60">
-          <p>© 2026 Tenki 天機 · Paper-mode research, not financial advice</p>
+          <p>© 2026 Tenki · Paper-mode research, not financial advice</p>
           <div className="flex items-center gap-5">
             <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
               Security

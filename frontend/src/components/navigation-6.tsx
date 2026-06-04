@@ -157,8 +157,8 @@ export function Navigation6() {
               aria-label="Home"
             >
               <span className="flex items-center gap-2 text-lg font-semibold tracking-tight text-neutral-900 dark:text-white">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-neutral-900 text-sm font-bold text-white dark:bg-white dark:text-neutral-900">天</span>
-                Tenki <span className="font-normal text-neutral-400">天機</span>
+                <span className="grid h-8 w-8 place-items-center rounded-xl bg-neutral-900 text-sm font-bold text-white dark:bg-white dark:text-neutral-900">T</span>
+                Tenki
               </span>
             </motion.a>
 
@@ -273,7 +273,7 @@ export function Navigation6() {
                       className="pb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8"
                     >
                       <div className="text-sm text-neutral-500 dark:text-neutral-400">
-                        <p>© 2026 Tenki 天機 · All rights reserved</p>
+                        <p>© 2026 Tenki · All rights reserved</p>
                         <p className="mt-1">Paper-mode research. Not financial advice.</p>
                       </div>
 

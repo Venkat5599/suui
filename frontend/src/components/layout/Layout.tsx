@@ -109,8 +109,8 @@ export function Layout() {
         {/* Brand */}
         <div className={cn("border-b", collapsed ? "p-2 flex justify-center" : "p-4")}>
           <Link to="/dashboard" className={cn("flex items-center font-bold text-base tracking-tight", collapsed ? "justify-center" : "gap-2")}>
-            <BarChart3 className="h-5 w-5 text-primary shrink-0" />
-            {!collapsed && "Tenki 天機"}
+            <Bot className="h-5 w-5 text-primary shrink-0" />
+            {!collapsed && "Tenki"}
           </Link>
         </div>
 

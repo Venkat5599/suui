@@ -272,7 +272,7 @@ export function Hero3() {
           {/* Header with Label and Button */}
           <div className="p-[4vmax] text-[max(1.2rem,1.3vmax)] text-white flex justify-between">
             <div className="leading-tight">
-              Tenki 天機
+              Tenki
               <br />
               Autonomous Quant
             </div>
