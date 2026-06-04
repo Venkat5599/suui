@@ -29,6 +29,9 @@ services:
       - vibe-runs:/app/agent/runs
       - vibe-sessions:/app/agent/sessions
       - vibe-runtime:/home/vibe/.vibe-trading
+    # On-chain Sui signing is opt-in per deployment: mount the host `sui` CLI +
+    # wallet config and set SUI_CLI_BIN / SUI_CLIENT_CONFIG via a local
+    # docker-compose.override.yml (see HACKATHON.md). Absent → Walrus-only.
     command: ["vibe-trading-worker"]
     # The worker doesn't serve HTTP, so override the image's API healthcheck.
     # Healthy = it has written a valid heartbeat (proves the loop is alive).

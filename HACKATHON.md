@@ -1,6 +1,8 @@
-# Vibe-Trading × Sui + Walrus — Signal Vault
+# Tenki × Sui + Walrus — Signal Vault
 
 Submission for **Tatum × Build on Sui with Walrus** (deadline **June 6, 17:00 UTC**).
+
+**Live app:** https://ten-ki.live — Tenki, an autonomous AI quant agent.
 
 ## ✅ Live deployment (Sui testnet, via Tatum RPC)
 
@@ -11,9 +13,9 @@ backtest on a schedule, publishes the run card to Walrus, and pins a
 | Artifact | Value |
 |----------|-------|
 | `signal_vault` package | `0x0e4326568fb219c65f63457849c9878f06ac1c7f8f0c44795d0dc78e18565b87` |
-| Example `SignalEntry` (auto-created by the worker) | `0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897` |
-| Walrus manifest blob | `gtzCAD5kneL5NhzHXG9W0O3Vh0EN6SzGMWiXlHQxS4Q` |
-| Publisher wallet | `0x52f8614201a72767b03314be8a5d4911d549485f684140d42ddc2339cd4992e6` |
+| Example `SignalEntry` (auto-created by the worker) | `0xdb5c94021c46183d059f4014fc3d86b89c53d5972520500c182e10315cc73092` |
+| Walrus manifest blob | `j1LdETXcVfHoOw04T7kso-VrSXrj5MErXCpfSLN0CXk` |
+| Publisher wallet | `0x0ecf280e25ba8dc55499a9b8a0a9ba73eb04c93ec355619f8bd8a1f85ea89836` |
 | RPC | `https://sui-testnet.gateway.tatum.io` (Tatum) |
 
 Verify it yourself (reads route through Tatum):
@@ -22,13 +24,13 @@ Verify it yourself (reads route through Tatum):
 # On-chain SignalEntry — its blob_id + sha256 match the Walrus manifest
 curl -s -X POST https://sui-testnet.gateway.tatum.io \
   -H "Content-Type: application/json" -H "x-api-key: <YOUR_TATUM_KEY>" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"sui_getObject","params":["0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897",{"showContent":true}]}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"sui_getObject","params":["0xdb5c94021c46183d059f4014fc3d86b89c53d5972520500c182e10315cc73092",{"showContent":true}]}'
 
 # The Walrus manifest blob it points to
-curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/gtzCAD5kneL5NhzHXG9W0O3Vh0EN6SzGMWiXlHQxS4Q
+curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/j1LdETXcVfHoOw04T7kso-VrSXrj5MErXCpfSLN0CXk
 ```
 
-On SuiScan: https://suiscan.xyz/testnet/object/0x5f5abc083997479f8f64681652bef4410ef82b7e7726825275cea387b6c73897
+On SuiScan: https://suiscan.xyz/testnet/object/0xdb5c94021c46183d059f4014fc3d86b89c53d5972520500c182e10315cc73092
 
 ## Core blockchain components
 
@@ -53,7 +55,7 @@ The agent discovers chain state, evaluates, and acts on its own. That is the age
 
 ## What it does
 
-Vibe-Trading is an AI trading agent that generates signal engines and runs
+Tenki is an AI trading agent that generates signal engines and runs
 backtests, producing a *trust-layer run card* for every run. This integration
 makes those artifacts **decentralized, portable, and tamper-evident**:
 
@@ -130,6 +132,27 @@ sui client publish --gas-budget 100000000
 `publish_signal(blob_id, sha256, size, &Clock)` creates a `SignalEntry`, emits
 `SignalPublished`, and transfers the entry to the caller. Read fields back with
 the public accessors or `SignalVault.verify_on_chain(object_id)`.
+
+## Enabling autonomous on-chain signing (deployment)
+
+Reads + Walrus storage work out of the box. To have the 24/7 worker also *sign*
+and pin `SignalEntry` objects on Sui, the signer shells out to the `sui` CLI.
+Wire it per-deployment via a local `docker-compose.override.yml` (not committed):
+
+```yaml
+services:
+  worker:
+    environment:
+      - SUI_CLI_BIN=/usr/local/bin/sui
+      - SUI_CLIENT_CONFIG=/opt/sui-vault/client.yaml   # testnet env + imported key
+    volumes:
+      - /usr/local/bin/sui:/usr/local/bin/sui:ro
+      - /opt/sui-vault:/opt/sui-vault
+```
+
+Set `TATUM_API_KEY`, `SUI_PRIVATE_KEY`, `SUI_VAULT_PACKAGE`, and
+`VIBE_AUTO_PUBLISH_VAULT=1` in `agent/.env`; fund the wallet with testnet SUI.
+Absent the CLI/config, the worker degrades cleanly to Walrus-only publishing.
 
 ## End-to-end demo flow (for the video)
 
