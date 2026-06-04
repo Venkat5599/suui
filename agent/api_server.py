@@ -592,6 +592,53 @@ def _configured_api_key() -> str:
     return os.getenv("API_AUTH_KEY") or _API_KEY or ""
 
 
+# --- Clerk session authentication --------------------------------------------
+# When CLERK_ISSUER is set, the API accepts a Clerk session JWT (sent as the
+# Bearer token) as a first-class credential, verified against the instance's
+# public JWKS. The static API_AUTH_KEY remains valid as a fallback so the
+# loopback worker, SSE EventSource clients, and the demo bundle keep working.
+_CLERK_ISSUER = (os.getenv("CLERK_ISSUER") or "").strip().rstrip("/")
+_CLERK_SECRET_KEY = (os.getenv("CLERK_SECRET_KEY") or "").strip()
+_clerk_jwk_client: Any = None
+
+
+def _get_clerk_jwk_client() -> Any:
+    """Return a cached PyJWKClient for the Clerk instance, or None if unavailable."""
+    global _clerk_jwk_client
+    if _clerk_jwk_client is not None or not _CLERK_ISSUER:
+        return _clerk_jwk_client
+    try:
+        from jwt import PyJWKClient
+        _clerk_jwk_client = PyJWKClient(f"{_CLERK_ISSUER}/.well-known/jwks.json")
+    except Exception:  # pragma: no cover - missing dep / bad config
+        logger.warning("Clerk auth configured but PyJWT is unavailable; skipping JWT verification")
+        _clerk_jwk_client = None
+    return _clerk_jwk_client
+
+
+def _verify_clerk_session(token: str) -> Optional[str]:
+    """Return the Clerk user id (``sub``) for a valid session JWT, else None."""
+    if not token or token.count(".") != 2 or not _CLERK_ISSUER:
+        return None
+    client = _get_clerk_jwk_client()
+    if client is None:
+        return None
+    try:
+        import jwt
+        signing_key = client.get_signing_key_from_jwt(token)
+        claims = jwt.decode(
+            token,
+            signing_key.key,
+            algorithms=["RS256"],
+            issuer=_CLERK_ISSUER,
+            options={"verify_aud": False},
+        )
+        sub = claims.get("sub")
+        return str(sub) if sub else None
+    except Exception:
+        return None
+
+
 async def require_auth(
     request: Request,
     cred: Optional[HTTPAuthorizationCredentials] = Security(_security),
@@ -650,6 +697,15 @@ def _validate_api_auth(
     allow_query: bool = False,
 ) -> None:
     """Validate configured auth, preserving loopback-only dev mode."""
+    token = _auth_credential_from_header_or_query(cred, query_api_key, allow_query=allow_query)
+
+    # A valid Clerk session JWT authenticates the user directly.
+    if token:
+        clerk_user_id = _verify_clerk_session(token)
+        if clerk_user_id:
+            request.state.clerk_user_id = clerk_user_id
+            return
+
     api_key = _configured_api_key()
     if not api_key:
         if _is_local_client(request):
@@ -659,7 +715,6 @@ def _validate_api_auth(
             detail="API_AUTH_KEY is required for non-local API access",
         )
 
-    token = _auth_credential_from_header_or_query(cred, query_api_key, allow_query=allow_query)
     if not token or not hmac.compare_digest(token, api_key):
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 

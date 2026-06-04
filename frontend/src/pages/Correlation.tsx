@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BarChart3 } from "lucide-react";
 import { CorrelationMatrix } from "@/components/charts/CorrelationMatrix";
-import { authHeaders } from "@/lib/apiAuth";
+import { authHeadersAsync } from "@/lib/apiAuth";
 
 const WINDOWS = [30, 60, 90, 180, 365] as const;
 
@@ -154,7 +154,7 @@ export function Correlation() {
 // Minimal request helper — includes the API auth header so it works behind auth.
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
-    headers: { "Content-Type": "application/json", ...authHeaders(), ...options?.headers },
+    headers: { "Content-Type": "application/json", ...(await authHeadersAsync()), ...options?.headers },
     ...options,
   });
   if (!res.ok) {

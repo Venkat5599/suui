@@ -32,6 +32,30 @@ export function authHeaders(): Record<string, string> {
   return h;
 }
 
+// Fetch a short-lived Clerk session token from the global Clerk instance.
+// Returns "" when Clerk is not loaded or no user is signed in.
+async function getClerkToken(): Promise<string> {
+  try {
+    const clerk = (window as unknown as {
+      Clerk?: { session?: { getToken: () => Promise<string | null> } };
+    }).Clerk;
+    const token = clerk?.session ? await clerk.session.getToken() : null;
+    return (token || "").trim();
+  } catch {
+    return "";
+  }
+}
+
+// Async variant used on the hot request path. Prefers a verified Clerk session
+// token; falls back to the static API key (demo bundle / SSE) when signed out.
+export async function authHeadersAsync(): Promise<Record<string, string>> {
+  const clerkToken = await getClerkToken();
+  const bearer = clerkToken || getApiAuthKey();
+  const h: Record<string, string> = bearer ? { Authorization: `Bearer ${bearer}` } : {};
+  if (currentUserId) h["X-User-Id"] = currentUserId;
+  return h;
+}
+
 export function authQuerySuffix(): string {
   const key = getApiAuthKey();
   return key ? `api_key=${encodeURIComponent(key)}` : "";

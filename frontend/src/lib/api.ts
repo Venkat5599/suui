@@ -1,4 +1,4 @@
-import { authHeaders, withAuthQuery } from "@/lib/apiAuth";
+import { authHeadersAsync, withAuthQuery } from "@/lib/apiAuth";
 
 const BASE = "";
 
@@ -41,7 +41,7 @@ async function errorFromResponse(res: Response): Promise<ApiError> {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const { headers, ...rest } = options ?? {};
-  const mergedHeaders: Record<string, string> = { "Content-Type": "application/json", ...authHeaders() };
+  const mergedHeaders: Record<string, string> = { "Content-Type": "application/json", ...(await authHeadersAsync()) };
   if (headers) {
     new Headers(headers).forEach((value, key) => {
       mergedHeaders[key] = value;
@@ -67,7 +67,7 @@ export interface UploadResult {
 async function uploadFile(file: File): Promise<UploadResult> {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch(`${BASE}/upload`, { method: "POST", headers: authHeaders(), body: form });
+  const res = await fetch(`${BASE}/upload`, { method: "POST", headers: await authHeadersAsync(), body: form });
   if (!res.ok) {
     throw await errorFromResponse(res);
   }
