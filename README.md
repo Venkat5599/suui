@@ -115,16 +115,19 @@ curl -s -X POST https://sui-testnet.gateway.tatum.io \
 
 ---
 
-## 🏆 Hackathon Submissions
+## 🌐 Multi-Chain Anchoring
 
-| Hackathon | Track | Chain | Status |
-|-----------|-------|-------|--------|
-| **Tatum × Build on Sui with Walrus** | Best Walrus Integration | Sui testnet | ✅ live + verified |
-| **Mantle · The Turing Test 2026** | Track 01 — AI Trading & Strategy | Mantle Sepolia | ✅ live + verified |
-| **Somnia Agentic L1** | Agent-First Design | Somnia Shannon | ✅ live + verified |
+The same Walrus manifest is anchored natively on three chains every cycle — one engine, three
+on-chain registries, fully verifiable.
 
-**Why it fits all three:** a genuinely autonomous AI agent (agent-first), meaningful Walrus storage
-+ Tatum Sui RPC (not decoration), and the same engine anchoring natively on each chain.
+| Chain | Role | Status |
+|-------|------|--------|
+| **Sui** (via Tatum RPC) | Move `signal_vault` — content-addressed proof + `SignalPublished` events | ✅ live + verified |
+| **Mantle Sepolia** | `SignalVault.sol` — EVM registry for AI trading signals | ✅ live + verified |
+| **Somnia Shannon** | `SignalVault.sol` — agent-native on-chain anchoring | ✅ live + verified |
+
+Meaningful Walrus storage (signal source + backtest evidence, not decoration), Tatum Sui RPC for
+reads/anchoring, and the same autonomous engine anchoring natively on each chain.
 
 ---
 
@@ -212,8 +215,8 @@ forge create src/SignalVault.sol:SignalVault \
 
 <div align="center">
 
-## Built for Tatum × Sui+Walrus · Mantle Turing Test 2026 · Somnia Agentic L1 🏆
+## One autonomous agent. Three chains. Tamper-evident proof.
 
-**One autonomous agent. Three chains. Tamper-evident proof.**
+**Sui · Mantle · Somnia**
 
 </div>
