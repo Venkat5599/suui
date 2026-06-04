@@ -153,8 +153,8 @@ reads/anchoring, and the same autonomous engine anchoring natively on each chain
 
 ```bash
 # 1. Clone
-git clone https://github.com/Venkat5599/Tenki.git
-cd Tenki
+git clone https://github.com/Venkat5599/AuditFlow.git
+cd AuditFlow
 
 # 2. Configure (LLM key required; chain keys optional)
 cp agent/.env.example agent/.env
