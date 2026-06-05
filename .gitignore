@@ -74,6 +74,11 @@ NOTES.md
 # Agent tool aliases (auto-generated mirror of CLAUDE.md)
 AGENTS.md
 
+# Rescued Kage VM source — contains live .env secrets (wallet key, exchange keys).
+# Never commit. Kept local only for migration.
+_vm_src/
+_vm_src.tgz
+
 .DS_Store
 
 # Alpha Zoo wiki artifacts (generated, not source)
